@@ -2,8 +2,8 @@
 
 """This module provides views to manage the contacts table."""
 
-from PyQt5.QtCore import Qt, QIODevice, QRunnable, QThreadPool, pyqtSlot
-from PyQt5.QtWidgets import (
+from PyQt6.QtCore import Qt, QIODevice, QRunnable, QThreadPool, pyqtSlot
+from PyQt6.QtWidgets import (
     QAbstractItemView,
     QDialog,
     QDialogButtonBox,
@@ -19,11 +19,7 @@ from PyQt5.QtWidgets import (
 )
 from ksync.ksync import KSync
 
-from PyQt5.QtSerialPort import QSerialPort
-
-port = QSerialPort("tnt0")
-port.open(QIODevice.OpenModeFlag.ReadWrite)
-k = KSync(port)
+from PyQt6.QtSerialPort import QSerialPort
 
 
 class Window(QMainWindow):
@@ -56,24 +52,26 @@ class Window(QMainWindow):
     def openBroadcastMessageDialog(self):
         """Open the Broadcast Message dialog."""
         dialog = BroadcastDialog(self)
-        if dialog.exec() == QDialog.accepted:
-            k.send_text(dialog.message, broadcast=True)
-            # worker = KSyncWorker(dialog.message)
-            # self.threadpool.start(worker)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            #k.send_text(dialog.message, broadcast=True)
+            worker = KSyncWorker(dialog.message, port="tnt0")
+            self.threadpool.start(worker)
 
 
-# class KSyncWorker(QRunnable):
-#     """
-#     Worker thread for ksync
-#     """
-#     def __init__(self, message: str):
-#         super().__init__()
-#         self.k = KSync(port)
-#         self.message = message
-#
-#     @pyqtSlot()
-#     def run(self):
-#         self.k.send_text(self.message, broadcast=True)
+class KSyncWorker(QRunnable):
+    """
+    Worker thread for ksync
+    """
+    def __init__(self, message: str, port: str):
+        super().__init__()
+        self.port = QSerialPort(port)
+        self.port.open(QIODevice.OpenModeFlag.ReadWrite)
+        self.k = KSync(self.port)
+        self.message = message
+
+    @pyqtSlot()
+    def run(self):
+        self.k.send_text(self.message, broadcast=True)
 
 
 class BroadcastDialog(QDialog):
