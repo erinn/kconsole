@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_SettingsDialog(object):
     def setupUi(self, SettingsDialog):
         SettingsDialog.setObjectName("SettingsDialog")
-        SettingsDialog.resize(418, 368)
+        SettingsDialog.resize(418, 315)
         self.gridLayout_3 = QtWidgets.QGridLayout(SettingsDialog)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.parametersBox = QtWidgets.QGroupBox(SettingsDialog)
@@ -86,16 +86,7 @@ class Ui_SettingsDialog(object):
         self.cancelButton = QtWidgets.QPushButton(SettingsDialog)
         self.cancelButton.setObjectName("cancelButton")
         self.horizontalLayout.addWidget(self.cancelButton)
-        self.gridLayout_3.addLayout(self.horizontalLayout, 2, 0, 1, 2)
-        self.additionalOptionsGroupBox = QtWidgets.QGroupBox(SettingsDialog)
-        self.additionalOptionsGroupBox.setObjectName("additionalOptionsGroupBox")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.additionalOptionsGroupBox)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.localEchoCheckBox = QtWidgets.QCheckBox(self.additionalOptionsGroupBox)
-        self.localEchoCheckBox.setChecked(True)
-        self.localEchoCheckBox.setObjectName("localEchoCheckBox")
-        self.verticalLayout.addWidget(self.localEchoCheckBox)
-        self.gridLayout_3.addWidget(self.additionalOptionsGroupBox, 1, 0, 1, 2)
+        self.gridLayout_3.addLayout(self.horizontalLayout, 1, 0, 1, 2)
 
         self.retranslateUi(SettingsDialog)
         self.cancelButton.clicked.connect(SettingsDialog.reject) # type: ignore
@@ -120,5 +111,3 @@ class Ui_SettingsDialog(object):
         self.pidLabel.setText(_translate("SettingsDialog", "Product ID:"))
         self.okButton.setText(_translate("SettingsDialog", "Ok"))
         self.cancelButton.setText(_translate("SettingsDialog", "Cancel"))
-        self.additionalOptionsGroupBox.setTitle(_translate("SettingsDialog", "Additional options"))
-        self.localEchoCheckBox.setText(_translate("SettingsDialog", "Local echo"))

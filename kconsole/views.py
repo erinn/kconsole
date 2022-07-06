@@ -23,7 +23,7 @@ from ksync.ksync import KSync
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
 
-from PyQt6.QtSerialPort import QSerialPort
+from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
 
 basedir = os.path.dirname(__file__)
 
@@ -55,6 +55,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog = SettingsDialog(self)
         dialog.exec()
 
+
 class KSyncWorker(QRunnable):
     """
     Worker thread for ksync
@@ -76,6 +77,27 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         """Initializer."""
         super().__init__(parent=parent)
         self.setupUi(self)
+        self.fillPortsInfo()
+        self.connectSignalsSlots()
+
+    def connectSignalsSlots(self):
+        self.serialPortInfoListBox.currentIndexChanged.connect(self.showPortInfo)
+
+    def fillPortsInfo(self):
+        for port in QSerialPortInfo.availablePorts():
+            port_info = {'portName': port.portName(),
+                         'description': port.description(),
+                         'manufacturer': port.manufacturer(),
+                         'serialNumber': port.serialNumber(),
+                         'systemLocation': port.systemLocation(),
+                         'vendorIdentifier': port.vendorIdentifier(),
+                         'productIdentifier': port.productIdentifier()}
+
+            self.serialPortInfoListBox.addItem(port_info['portName'], port_info)
+
+    def showPortInfo(self, index: int):
+        port_info = self.serialPortInfoListBox.itemData(index)
+        self.locationLabel.setText(port_info['systemLocation'])
 
 
 class BroadcastDialog(QDialog):
