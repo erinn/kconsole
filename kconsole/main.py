@@ -7,13 +7,15 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
-from .views import Window
+from kconsole.views import Window
 
 
 def main():
     """RP Contacts main function."""
     # Create the application
     app = QApplication(sys.argv)
+    app.setApplicationDisplayName('KConsole')
+    app.setOrganizationName('Screaming Loon')
     # Create the main window
     win = Window()
     win.show()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """This module provides views to manage the contacts table."""
+import os
 
 from PyQt6.QtCore import Qt, QIODevice, QRunnable, QThreadPool, pyqtSlot
 from PyQt6.QtWidgets import (
@@ -19,35 +20,28 @@ from PyQt6.QtWidgets import (
 )
 from ksync.ksync import KSync
 
+from kconsole.main_window_ui import Ui_MainWindow
+from kconsole.settings_dialog import Ui_SettingsDialog
+
 from PyQt6.QtSerialPort import QSerialPort
 
+basedir = os.path.dirname(__file__)
 
-class Window(QMainWindow):
+
+class Window(QMainWindow, Ui_MainWindow):
     """Main Window."""
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent)
+
         self.threadpool = QThreadPool()
+        self.setupUi(self)
+        self.connectSignalsSlots()
 
-        self.setWindowTitle("KConsole")
-        self.centralWidget = QWidget()
-        self.setCentralWidget(self.centralWidget)
-        self.layout = QHBoxLayout()
-        self.centralWidget.setLayout(self.layout)
-
-        """Setup the main window's GUI."""
-        # Create the table view widget
-        self.table = QTableView()
-        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.table.resizeColumnsToContents()
-        # Create buttons
-        self.broadcastMessageButton = QPushButton("Broadcast Message")
-        self.broadcastMessageButton.clicked.connect(self.openBroadcastMessageDialog)
-        # Lay out the GUI
-        layout = QVBoxLayout()
-        layout.addWidget(self.broadcastMessageButton)
-        self.layout.addWidget(self.table)
-        self.layout.addLayout(layout)
+    def connectSignalsSlots(self):
+        self.actionExit.triggered.connect(self.close)
+        self.broadcastButton.clicked.connect(self.openBroadcastMessageDialog)
+        self.settingsButton.clicked.connect(self.openSettingsDialog)
 
     def openBroadcastMessageDialog(self):
         """Open the Broadcast Message dialog."""
@@ -57,6 +51,9 @@ class Window(QMainWindow):
             worker = KSyncWorker(dialog.message, port="tnt0")
             self.threadpool.start(worker)
 
+    def openSettingsDialog(self):
+        dialog = SettingsDialog(self)
+        dialog.exec()
 
 class KSyncWorker(QRunnable):
     """
@@ -72,6 +69,13 @@ class KSyncWorker(QRunnable):
     @pyqtSlot()
     def run(self):
         self.k.send_text(self.message, broadcast=True)
+
+
+class SettingsDialog(QDialog, Ui_SettingsDialog):
+    def __init__(self, parent=None):
+        """Initializer."""
+        super().__init__(parent=parent)
+        self.setupUi(self)
 
 
 class BroadcastDialog(QDialog):
