@@ -22,6 +22,9 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="baudRateLabel">
+        <property name="toolTip">
+         <string>Kenwood radios only support 4800 and 9600 baud.</string>
+        </property>
         <property name="text">
          <string>BaudRate:</string>
         </property>
@@ -143,16 +146,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="okButton">
-       <property name="text">
-        <string>Ok</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancelButton">
-       <property name="text">
-        <string>Cancel</string>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
        </property>
       </widget>
      </item>
@@ -163,34 +159,34 @@
  <resources/>
  <connections>
   <connection>
-   <sender>cancelButton</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
    <receiver>SettingsDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>354</x>
-     <y>349</y>
+     <x>283</x>
+     <y>288</y>
     </hint>
     <hint type="destinationlabel">
-     <x>372</x>
-     <y>320</y>
+     <x>294</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>okButton</sender>
-   <signal>clicked()</signal>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
    <receiver>SettingsDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>261</x>
-     <y>340</y>
+     <x>354</x>
+     <y>285</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>320</y>
+     <x>351</x>
+     <y>315</y>
     </hint>
    </hints>
   </connection>

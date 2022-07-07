@@ -15,7 +15,9 @@ def main():
     # Create the application
     app = QApplication(sys.argv)
     app.setApplicationDisplayName('KConsole')
-    app.setOrganizationName('Screaming Loon')
+    app.setApplicationName('KConsole')
+    app.setOrganizationName('SARStats')
+    app.setOrganizationDomain('sarstats.com')
     # Create the main window
     win = Window()
     win.show()
