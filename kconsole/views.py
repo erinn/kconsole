@@ -3,7 +3,7 @@
 """This module provides views to manage the contacts table."""
 import os
 
-from PyQt6.QtCore import Qt, QIODevice, QRunnable, QSettings, QThreadPool, pyqtSlot
+from PyQt6.QtCore import Qt, QIODevice, QRunnable, QThreadPool, pyqtSlot, QSettings
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QDialog,
@@ -38,6 +38,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.threadpool = QThreadPool()
         self.setupUi(self)
         self.connectSignalsSlots()
+        self.settings = QSettings()
+
+        if not self.settings.contains('default_port'):
+            self.openSettingsDialog()
+
+        self.serial_port = None
+        self.open_serial_port()
+        self.ksync = KSync(self.serial_port)
 
     def connectSignalsSlots(self):
         self.actionExit.triggered.connect(self.close)
@@ -48,36 +56,25 @@ class Window(QMainWindow, Ui_MainWindow):
         """Open the Broadcast Message dialog."""
         dialog = BroadcastDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            #k.send_text(dialog.message, broadcast=True)
-            worker = KSyncWorker(dialog.message, port="tnt0")
-            self.threadpool.start(worker)
+            self.ksync.send_text(dialog.message, broadcast=True)
 
     def openSettingsDialog(self):
         dialog = SettingsDialog(self)
         dialog.exec()
 
-class KSyncWorker(QRunnable):
-    """
-    Worker thread for ksync
-    """
-    def __init__(self, message: str, port: str):
-        super().__init__()
-        self.port = QSerialPort(port)
-        self.port.open(QIODevice.OpenModeFlag.ReadWrite)
-        self.k = KSync(self.port)
-        self.message = message
-
-    @pyqtSlot()
-    def run(self):
-        self.k.send_text(self.message, broadcast=True)
-
+    def open_serial_port(self) -> object:
+        """
+        Open the QSerialport object for use in the program.
+        """
+        self.serial_port = QSerialPort(self.settings.value('default_port'))
+        self.serial_port.open(QIODevice.OpenModeFlag.ReadWrite)
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
         self.setupUi(self)
-        self.settings = QSettings()
+        self.settings = parent.settings
         self.fillPortsInfo()
         self.fillBaudOptions()
         self.fill_data_bits_options()
@@ -107,7 +104,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
     def fillBaudOptions(self) -> None:
         """
-        File in the Baud rate info options for the serial port. Indications are that only 4800 and 9600 work with
+        Fill in the Baud rate info options for the serial port. Indications are that only 4800 and 9600 work with
         Kenwood Radios. Need more info to confirm.
         """
 
