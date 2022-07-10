@@ -101,7 +101,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.setupUi(self)
         self.saved_settings = QSettings()
         self.program_settings = {}
-        self.fillPortsInfo()
+        self.fill_ports_info()
         self.fill_baud_options()
         self.fill_data_bits_options()
         self.fill_parity_bits_options()
@@ -193,7 +193,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
         return None
 
-    def fillPortsInfo(self) -> None:
+    def fill_ports_info(self) -> None:
         """
         Fill in the serial port combo box from the available ports on the system
         and provide extended information to be displayed in the settings dialog.
