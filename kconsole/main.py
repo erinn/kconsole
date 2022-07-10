@@ -14,10 +14,10 @@ def main():
     """RP Contacts main function."""
     # Create the application
     app = QApplication(sys.argv)
-    app.setApplicationDisplayName('KConsole')
-    app.setApplicationName('KConsole')
-    app.setOrganizationName('SARStats')
-    app.setOrganizationDomain('sarstats.com')
+    app.setApplicationDisplayName("KConsole")
+    app.setApplicationName("KConsole")
+    app.setOrganizationName("SARStats")
+    app.setOrganizationDomain("sarstats.com")
     # Create the main window
     win = Window()
     win.show()

@@ -78,24 +78,36 @@ class Ui_SettingsDialog(object):
         self.gridLayout_3.addWidget(self.selectBox, 0, 0, 1, 1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem = QtWidgets.QSpacerItem(96, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            96,
+            20,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+        )
         self.horizontalLayout.addItem(spacerItem)
         self.buttonBox = QtWidgets.QDialogButtonBox(SettingsDialog)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.StandardButton.Cancel
+            | QtWidgets.QDialogButtonBox.StandardButton.Ok
+        )
         self.buttonBox.setObjectName("buttonBox")
         self.horizontalLayout.addWidget(self.buttonBox)
         self.gridLayout_3.addLayout(self.horizontalLayout, 1, 0, 1, 2)
 
         self.retranslateUi(SettingsDialog)
-        self.buttonBox.rejected.connect(SettingsDialog.reject) # type: ignore
-        self.buttonBox.accepted.connect(SettingsDialog.accept) # type: ignore
+        self.buttonBox.rejected.connect(SettingsDialog.reject)  # type: ignore
+        self.buttonBox.accepted.connect(SettingsDialog.accept)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(SettingsDialog)
 
     def retranslateUi(self, SettingsDialog):
         _translate = QtCore.QCoreApplication.translate
         SettingsDialog.setWindowTitle(_translate("SettingsDialog", "Settings"))
         self.parametersBox.setTitle(_translate("SettingsDialog", "Select Parameters"))
-        self.baudRateLabel.setToolTip(_translate("SettingsDialog", "Kenwood radios only support 4800 and 9600 baud."))
+        self.baudRateLabel.setToolTip(
+            _translate(
+                "SettingsDialog", "Kenwood radios only support 4800 and 9600 baud."
+            )
+        )
         self.baudRateLabel.setText(_translate("SettingsDialog", "BaudRate:"))
         self.dataBitsLabel.setText(_translate("SettingsDialog", "Data bits:"))
         self.parityLabel.setText(_translate("SettingsDialog", "Parity:"))

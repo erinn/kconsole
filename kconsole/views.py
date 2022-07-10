@@ -4,6 +4,8 @@
 import os
 
 from PyQt6.QtCore import Qt, QIODevice, QSettings
+from PyQt6.QtGui import QIcon
+from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
@@ -11,20 +13,18 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QMainWindow,
     QMessageBox,
-    QVBoxLayout
+    QVBoxLayout,
 )
-from ksync.ksync import KSync
-
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
-
-from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
+from ksync.ksync import KSync
 
 basedir = os.path.dirname(__file__)
 
 
 class Window(QMainWindow, Ui_MainWindow):
     """Main Window."""
+
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent)
@@ -32,9 +32,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.settings = self.load_settings()
         self.saved_settings = QSettings()
         self.setupUi(self)
+        self.actionSettings.setIcon(
+            QIcon(os.path.join(basedir, "ui/resources/gear.png"))
+        )
         self.connect_signals_slots()
 
-        if not self.saved_settings.contains('default_port'):
+        if not self.saved_settings.contains("default_port"):
             self.open_settings_dialog()
 
         self.serial_port = None
@@ -70,7 +73,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         dialog = SettingsDialog(self)
         dialog.exec()
-        return None
 
     def open_serial_port(self) -> None:
         """
@@ -90,6 +92,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """
         Close the serial port if it was open.
         """
+
         if self.serial_port.isOpen():
             self.serial_port.close()
 
@@ -110,14 +113,18 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
         # If Default_Port is defined set the settings to that and display the port info.
         if self.saved_settings.value("default_port"):
-            self.serialPortInfoListBox.setCurrentText(self.saved_settings.value("default_port"))
+            self.serialPortInfoListBox.setCurrentText(
+                self.saved_settings.value("default_port")
+            )
             self.show_port_info(self.serialPortInfoListBox.currentIndex())
             self.saved_settings.beginGroup(self.serialPortInfoListBox.currentText())
             self.baudRateBox.setCurrentText(self.saved_settings.value("baud_rate"))
             self.dataBitsBox.setCurrentText(self.saved_settings.value("data_bits"))
             self.parityBox.setCurrentText(self.saved_settings.value("parity_bits"))
             self.stopBitsBox.setCurrentText(self.saved_settings.value("stop_bits"))
-            self.flowControlBox.setCurrentText(self.saved_settings.value("flow_control"))
+            self.flowControlBox.setCurrentText(
+                self.saved_settings.value("flow_control")
+            )
             self.saved_settings.endGroup()
         else:
             self.show_port_info(self.serialPortInfoListBox.currentIndex())
@@ -144,8 +151,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.baudRateBox.addItem("9600", QSerialPort.BaudRate.Baud9600)
         self.baudRateBox.addItem("4800", QSerialPort.BaudRate.Baud4800)
 
-        return None
-
     def fill_data_bits_options(self) -> None:
         """
         Fill in the data bits options
@@ -156,8 +161,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.dataBitsBox.addItem("6", QSerialPort.DataBits.Data6)
         self.dataBitsBox.addItem("5", QSerialPort.DataBits.Data5)
 
-        return None
-
     def fill_flow_control_options(self) -> None:
         """
         Fill in the flow control options.
@@ -166,8 +169,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.flowControlBox.addItem("None", QSerialPort.FlowControl.NoFlowControl)
         self.flowControlBox.addItem("RTS/CTS", QSerialPort.FlowControl.HardwareControl)
         self.flowControlBox.addItem("XON/XOFF", QSerialPort.FlowControl.SoftwareControl)
-
-        return None
 
     def fill_parity_bits_options(self) -> None:
         """
@@ -180,8 +181,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.parityBox.addItem("Mark", QSerialPort.Parity.MarkParity)
         self.parityBox.addItem("Space", QSerialPort.Parity.SpaceParity)
 
-        return None
-
     def fill_stop_bits_options(self) -> None:
         """
         Fill in the stop bits options
@@ -191,8 +190,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.stopBitsBox.addItem("1.5", QSerialPort.StopBits.OneAndHalfStop)
         self.stopBitsBox.addItem("2", QSerialPort.StopBits.TwoStop)
 
-        return None
-
     def fill_ports_info(self) -> None:
         """
         Fill in the serial port combo box from the available ports on the system
@@ -200,44 +197,17 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         """
 
         for port in QSerialPortInfo.availablePorts():
-            port_info = {'portName': port.portName(),
-                         'description': port.description(),
-                         'manufacturer': port.manufacturer(),
-                         'serialNumber': port.serialNumber(),
-                         'systemLocation': port.systemLocation(),
-                         'vendorIdentifier': port.vendorIdentifier(),
-                         'productIdentifier': port.productIdentifier()}
+            port_info = {
+                "portName": port.portName(),
+                "description": port.description(),
+                "manufacturer": port.manufacturer(),
+                "serialNumber": port.serialNumber(),
+                "systemLocation": port.systemLocation(),
+                "vendorIdentifier": port.vendorIdentifier(),
+                "productIdentifier": port.productIdentifier(),
+            }
 
-            self.serialPortInfoListBox.addItem(port_info['portName'], port_info)
-
-        return None
-
-    def show_port_info(self, index: int) -> None:
-        """
-        Display serial port information on changes or display.
-        """
-
-        if index != -1:
-            port_info = self.serialPortInfoListBox.itemData(index)
-            self.locationLabel.setText(f'Location: {port_info["systemLocation"]}')
-            self.descriptionLabel.setText(f'Description: {port_info["description"]}')
-            self.manufacturerLabel.setText(f'Manufacturer: {port_info["manufacturer"]}')
-            self.serialNumberLabel.setText(f'Serial number: {port_info["serialNumber"]}')
-            self.vidLabel.setText(f'Vendor ID: {str(port_info["vendorIdentifier"])}')
-            self.pidLabel.setText(f'Product ID: {str(port_info["productIdentifier"])}')
-
-        return None
-
-    def update_program_settings(self) -> None:
-        """
-        Update the program settings.
-        """
-
-        self.program_settings["baud_rate"] = self.baudRateBox.currentData()
-        self.program_settings["data_bits"] = self.dataBitsBox.currentData()
-        self.program_settings["parity"] = self.parityBox.currentData()
-        self.program_settings["stop_bits"] = self.stopBitsBox.currentData()
-        self.program_settings["flow_control"] = self.flowControlBox.currentData()
+            self.serialPortInfoListBox.addItem(port_info["portName"], port_info)
 
     def save_settings(self) -> None:
         """
@@ -257,11 +227,39 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         # Flush to permanent storage
         self.saved_settings.sync()
 
-        return None
+    def show_port_info(self, index: int) -> None:
+        """
+        Display serial port information on changes or display.
+        """
+
+        if index != -1:
+            port_info = self.serialPortInfoListBox.itemData(index)
+            self.locationLabel.setText(f'Location: {port_info["systemLocation"]}')
+            self.descriptionLabel.setText(f'Description: {port_info["description"]}')
+            self.manufacturerLabel.setText(f'Manufacturer: {port_info["manufacturer"]}')
+            self.serialNumberLabel.setText(
+                f'Serial number: {port_info["serialNumber"]}'
+            )
+            self.vidLabel.setText(f'Vendor ID: {str(port_info["vendorIdentifier"])}')
+            self.pidLabel.setText(f'Product ID: {str(port_info["productIdentifier"])}')
+
+    def update_program_settings(self) -> None:
+        """
+        Update the program settings. These are the actual objects that hold
+        the setting state. QSettings can not handle objects so it is mapped
+        through the combo boxes.
+        """
+
+        self.program_settings["baud_rate"] = self.baudRateBox.currentData()
+        self.program_settings["data_bits"] = self.dataBitsBox.currentData()
+        self.program_settings["parity"] = self.parityBox.currentData()
+        self.program_settings["stop_bits"] = self.stopBitsBox.currentData()
+        self.program_settings["flow_control"] = self.flowControlBox.currentData()
 
 
 class BroadcastDialog(QDialog):
     """Broadcast dialog."""
+
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
