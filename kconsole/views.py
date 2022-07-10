@@ -44,7 +44,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def connect_signals_slots(self):
         self.actionExit.triggered.connect(self.close)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
-        self.settingsButton.clicked.connect(self.open_settings_dialog)
+        self.actionSettings.triggered.connect(self.open_settings_dialog)
 
     def load_settings(self) -> dict:
         """
@@ -111,7 +111,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         # If Default_Port is defined set the settings to that and display the port info.
         if self.saved_settings.value("default_port"):
             self.serialPortInfoListBox.setCurrentText(self.saved_settings.value("default_port"))
-            self.showPortInfo(self.serialPortInfoListBox.currentIndex())
+            self.show_port_info(self.serialPortInfoListBox.currentIndex())
             self.saved_settings.beginGroup(self.serialPortInfoListBox.currentText())
             self.baudRateBox.setCurrentText(self.saved_settings.value("baud_rate"))
             self.dataBitsBox.setCurrentText(self.saved_settings.value("data_bits"))
@@ -120,7 +120,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
             self.flowControlBox.setCurrentText(self.saved_settings.value("flow_control"))
             self.saved_settings.endGroup()
         else:
-            self.showPortInfo(self.serialPortInfoListBox.currentIndex())
+            self.show_port_info(self.serialPortInfoListBox.currentIndex())
 
         self.update_program_settings()
         self.connect_signal_slots()
@@ -130,7 +130,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         Connect the signals to the slots.
         """
 
-        self.serialPortInfoListBox.currentIndexChanged.connect(self.showPortInfo)
+        self.serialPortInfoListBox.currentIndexChanged.connect(self.show_port_info)
         self.buttonBox.accepted.connect(self.save_settings)
         self.buttonBox.accepted.connect(self.update_program_settings)
 
@@ -212,7 +212,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
         return None
 
-    def showPortInfo(self, index: int) -> None:
+    def show_port_info(self, index: int) -> None:
         """
         Display serial port information on changes or display.
         """
