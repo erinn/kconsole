@@ -15,9 +15,9 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QVBoxLayout,
 )
+from ksync.ksync import KSync
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
-from ksync.ksync import KSync
 
 basedir = os.path.dirname(__file__)
 
@@ -35,6 +35,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSettings.setIcon(
             QIcon(os.path.join(basedir, "ui/resources/gear.png"))
         )
+        self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.connect_signals_slots()
 
         if not self.saved_settings.contains("default_port"):
@@ -45,6 +46,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.ksync = KSync(self.serial_port)
 
     def connect_signals_slots(self):
+        """
+        Connect signals to slots.
+        """
+
         self.actionExit.triggered.connect(self.close)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
@@ -57,7 +62,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog = SettingsDialog(self)
         return dialog.program_settings
 
-    def open_broadcast_message_dialog(self):
+    def open_broadcast_message_dialog(self) -> None:
         """
         Open the Broadcast Message dialog.
         """
@@ -98,6 +103,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
+    """
+    Build the settings dialog.
+    """
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
@@ -132,7 +140,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.update_program_settings()
         self.connect_signal_slots()
 
-    def connect_signal_slots(self):
+    def connect_signal_slots(self) -> None:
         """
         Connect the signals to the slots.
         """
@@ -172,7 +180,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
     def fill_parity_bits_options(self) -> None:
         """
-        Fill in the data bits options
+        Fill in the data bits options.
         """
 
         self.parityBox.addItem("None", QSerialPort.Parity.NoParity)
@@ -183,7 +191,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
     def fill_stop_bits_options(self) -> None:
         """
-        Fill in the stop bits options
+        Fill in the stop bits options.
         """
 
         self.stopBitsBox.addItem("1", QSerialPort.StopBits.OneStop)
@@ -268,13 +276,14 @@ class BroadcastDialog(QDialog):
         self.setLayout(self.layout)
         self.data = None
         """Setup the Broadcast dialog's GUI."""
+        self.message = ""
         # Create line edits for data fields
-        self.messageField = QLineEdit()
-        self.messageField.setObjectName("Message")
-        self.messageField.setPlaceholderText("Message to Broadcast")
+        self.message_field = QLineEdit()
+        self.message_field.setObjectName("Message")
+        self.message_field.setPlaceholderText("Message to Broadcast")
         # Lay out the data fields
         layout = QFormLayout()
-        layout.addRow("Message:", self.messageField)
+        layout.addRow("Message:", self.message_field)
         self.layout.addLayout(layout)
         # Add standard buttons to the dialog and connect them
         self.buttonsBox = QDialogButtonBox(self)
@@ -286,15 +295,15 @@ class BroadcastDialog(QDialog):
         self.buttonsBox.rejected.connect(self.reject)
         self.layout.addWidget(self.buttonsBox)
 
-    def accept(self):
+    def accept(self) -> None:
         """Accept the message provided through the dialog."""
-        self.message = self.messageField.text()
+        self.message = self.message_field.text()
 
         if len(self.message) > 4096:
             QMessageBox.critical(
                 self,
                 "Error!",
-                f"Message size must not exceed 4096 characters.",
+                "Message size must not exceed 4096 characters.",
             )
 
         if not self.message:
