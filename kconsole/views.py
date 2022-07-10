@@ -3,21 +3,14 @@
 """This module provides views to manage the contacts table."""
 import os
 
-from PyQt6.QtCore import Qt, QIODevice, QSettings
+from PyQt6.QtCore import QIODevice, QSettings
 from PyQt6.QtGui import QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
-from PyQt6.QtWidgets import (
-    QDialog,
-    QDialogButtonBox,
-    QFormLayout,
-    QLineEdit,
-    QMainWindow,
-    QMessageBox,
-    QVBoxLayout,
-)
+from PyQt6.QtWidgets import QDialog, QMainWindow, QMessageBox
 from ksync.ksync import KSync
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
+from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 
 basedir = os.path.dirname(__file__)
 
@@ -265,39 +258,23 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.program_settings["flow_control"] = self.flowControlBox.currentData()
 
 
-class BroadcastDialog(QDialog):
+class BroadcastDialog(QDialog, Ui_BroadcastDialog):
     """Broadcast dialog."""
 
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
-        self.setWindowTitle("Broadcast Message")
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.data = None
-        """Setup the Broadcast dialog's GUI."""
         self.message = ""
-        # Create line edits for data fields
-        self.message_field = QLineEdit()
-        self.message_field.setObjectName("Message")
-        self.message_field.setPlaceholderText("Message to Broadcast")
-        # Lay out the data fields
-        layout = QFormLayout()
-        layout.addRow("Message:", self.message_field)
-        self.layout.addLayout(layout)
-        # Add standard buttons to the dialog and connect them
-        self.buttonsBox = QDialogButtonBox(self)
-        self.buttonsBox.setOrientation(Qt.Orientation.Horizontal)
-        self.buttonsBox.setStandardButtons(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
-        self.buttonsBox.accepted.connect(self.accept)
-        self.buttonsBox.rejected.connect(self.reject)
-        self.layout.addWidget(self.buttonsBox)
+        self.setupUi(self)
+        self.connect_signal_slots()
+
+    def connect_signal_slots(self):
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
 
     def accept(self) -> None:
         """Accept the message provided through the dialog."""
-        self.message = self.message_field.text()
+        self.message = self.broadcastMessage.text()
 
         if len(self.message) > 4096:
             QMessageBox.critical(
