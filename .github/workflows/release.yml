@@ -1,0 +1,33 @@
+name: Release KConsole
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+jobs:
+  build-release:
+    runs-on: [windows-latest, ubuntu-latest]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.10
+            cache: pipenv
+
+        - name: install pipenv
+          run: pip install pipenv
+
+        - name: pipenv install
+          run: pipenv install -d
+
+        - name: pyinstaller
+          run: pyinstaller kconsole.spec
+
+        - name: Upload a Build Artifact
+          uses: actions/upload-artifact@v3.1.0
+            name: KConsole
+            path: dist
