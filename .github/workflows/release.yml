@@ -32,8 +32,8 @@ jobs:
       - name: pyinstaller
         run: pyinstaller kconsole.spec
 
-      - name: Upload a Build Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: KConsole-${{ matrix.os }}
+          name: kconsole-${{ matrix.os }}
           path: 'dist'
