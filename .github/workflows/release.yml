@@ -19,8 +19,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
-          cache: pipenv
+          python-version: '3.10'
+          cache: 'pipenv'
 
       - name: install pipenv
         run: pip install pipenv
@@ -34,5 +34,5 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: KConsole
-          path: dist
+          name: 'KConsole'
+          path: 'dist'
