@@ -36,4 +36,6 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: kconsole-${{ matrix.os }}
-          path: 'dist'
+          path: |
+           dist
+           !dist/kconsole/kcsonle/ui/resources/*
