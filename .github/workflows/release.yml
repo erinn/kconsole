@@ -4,7 +4,7 @@ on:
     branches:
       - workflows
     tags:
-      - '*'
+      - '*.*.*'
 env:
   version: "0.1.1"
 
@@ -25,7 +25,7 @@ jobs:
           python-version: '3.10'
           cache: 'pipenv'
 
-      - name: Install pywin32 if on Windows
+      - name: Install pywin32 and pefile if on Windows
         run: |
           pip install --upgrade pywin32-ctypes
           pip install --upgrade pefile
@@ -48,8 +48,8 @@ jobs:
           filename: kconsole-${{ matrix.os }}-${{ env.version }}.zip
           path: dist/kconsole/
 
-      - name: Upload Release Binaries
-        uses: actions/upload-artifact@v3.1.0
+      - name: Push Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: kconsole-${{ matrix.os }}-${{ env.version }}
-          path: kconsole-${{ matrix.os }}-${{ env.version }}.zip
+          files: kconsole-${{ matrix.os }}-${{ env.version }}.zip
