@@ -1,8 +1,6 @@
 name: Release KConsole
 on:
   push:
-    branches:
-      - workflows
     tags:
       - '*.*.*'
 env:
