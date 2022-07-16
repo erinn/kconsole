@@ -26,7 +26,7 @@ jobs:
         run: pip install pipenv
 
       - name: pipenv install
-        run: pipenv install -d
+        run: pipenv install --system --dev
 
       - name: pyinstaller
         run: pyinstaller kconsole.spec
