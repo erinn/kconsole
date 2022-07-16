@@ -2,9 +2,10 @@ name: Release KConsole
 on:
   push:
     branches:
-      - master
+      - workflows
     tags:
-      - v*
+      - *
+
 jobs:
   build-release:
     strategy:
