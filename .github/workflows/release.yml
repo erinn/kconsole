@@ -5,12 +5,14 @@ on:
       - workflows
     tags:
       - '*'
+env:
+  version: "0.1.1"
 
 jobs:
   build-release:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -32,10 +34,15 @@ jobs:
       - name: pyinstaller
         run: pyinstaller kconsole.spec
 
-      - name: Upload Build Artifact
+      - name: Archive Release Binaries
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: kconsole-${{ matrix.os }}-${{ env.version }}.zip
+          path: dist/
+
+      - name: Upload Release Binaries
         uses: actions/upload-artifact@v3.1.0
         with:
           name: kconsole-${{ matrix.os }}
-          path: |
-           dist
-           !dist/kconsole/kconsole/ui/resources/
+          path: kconsole-${{ matrix.os }}-${{ env.version }}.zip

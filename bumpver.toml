@@ -14,3 +14,7 @@ push = true
 "kconsole/__init__.py" = [
   '__version__ = "{version}"',
 ]
+
+".github/workflows/release.yml" = [
+    'version: "{version}"'
+]
