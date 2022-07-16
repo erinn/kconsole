@@ -11,26 +11,27 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-        - name: Setup Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: 3.10
-            cache: pipenv
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+          cache: pipenv
 
-        - name: install pipenv
-          run: pip install pipenv
+      - name: install pipenv
+        run: pip install pipenv
 
-        - name: pipenv install
-          run: pipenv install -d
+      - name: pipenv install
+        run: pipenv install -d
 
-        - name: pyinstaller
-          run: pyinstaller kconsole.spec
+      - name: pyinstaller
+        run: pyinstaller kconsole.spec
 
-        - name: Upload a Build Artifact
-          uses: actions/upload-artifact@v3.1.0
-            name: KConsole
-            path: dist
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: KConsole
+          path: dist
