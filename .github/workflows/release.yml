@@ -38,4 +38,4 @@ jobs:
           name: kconsole-${{ matrix.os }}
           path: |
            dist
-           !dist/kconsole/kcsonle/ui/resources/*
+           !dist/kconsole/kconsole/ui/resources/
