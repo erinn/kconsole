@@ -25,10 +25,13 @@ jobs:
           python-version: '3.10'
           cache: 'pipenv'
 
-      - name: install pipenv
+      - name: Install pywin32 if on windows
+        run: pip install pywin32-ctypes
+        if: matrix.os == 'windows-latest'
+
+      - name: Install pipenv
         run: |
           pip install pipenv
-          pip install --upgrade cffi
 
       - name: pipenv install
         run: pipenv install --system --dev
