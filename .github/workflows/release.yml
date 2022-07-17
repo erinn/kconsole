@@ -39,11 +39,21 @@ jobs:
       - name: pyinstaller
         run: pyinstaller kconsole.spec
 
-      - name: Archive Release Binaries
+      - name: Archive Windows Release Binaries
         uses: thedoctor0/zip-release@main
+        if: matrix.os == 'windows-latest'
         with:
           type: 'zip'
-          filename: kconsole-${{ matrix.os }}-${{ env.version }}.zip
+          filename: kconsole-windows-${{ env.version }}.zip
+          path: kconsole/
+          directory: dist/
+
+      - name: Archive Linux Release Binaries
+        uses: thedoctor0/zip-release@main
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          type: 'zip'
+          filename: kconsole-linux-${{ env.version }}.zip
           path: kconsole/
           directory: dist/
 
