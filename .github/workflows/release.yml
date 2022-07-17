@@ -44,10 +44,11 @@ jobs:
         with:
           type: 'zip'
           filename: kconsole-${{ matrix.os }}-${{ env.version }}.zip
-          path: dist/kconsole/
+          path: kconsole/
+          directory: dist/
 
       - name: Push Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: kconsole-${{ matrix.os }}-${{ env.version }}.zip
+          files: dist/kconsole-${{ matrix.os }}-${{ env.version }}.zip
