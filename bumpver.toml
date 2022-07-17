@@ -18,3 +18,7 @@ push = true
 ".github/workflows/release.yml" = [
     "version: '{version}'"
 ]
+
+"kconsole-innosetup.iss" = [
+    'MyAppVersion "{version}"'
+    ]

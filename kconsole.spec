@@ -8,7 +8,7 @@ a = Analysis(
     ['kconsole.py'],
     pathex=[],
     binaries=[],
-    datas=[('kconsole/ui/resources', 'kconsole/ui/resources')],
+    datas=[('kconsole/ui/resources', 'kconsole/ui/resources'), ('LICENSE.txt', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
