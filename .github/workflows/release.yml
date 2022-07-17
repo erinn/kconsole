@@ -57,8 +57,20 @@ jobs:
           path: kconsole/
           directory: dist/
 
-      - name: Push Release
+      -name: Create Windows Installer
+       if: matrix.os == 'windows-latest'
+       run: iscc.exe kconsole-innosetup.iss
+
+      - name: Push Windows Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        if: matrix.os == 'windows-latest'
         with:
-          files: dist/kconsole-${{ matrix.os }}-${{ env.version }}.zip
+          files: |
+            dist/kconsole-windows-${{ env.version }}.zip
+            dist/kconsole-setup.exe
+
+      - name: Push Linux Release
+        uses: softprops/action-gh-release@v1
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          files: dist/kconsole-linux-${{ env.version }}.zip
