@@ -57,9 +57,9 @@ jobs:
           path: kconsole/
           directory: dist/
 
-      -name: Create Windows Installer
-       if: matrix.os == 'windows-latest'
-       run: iscc.exe kconsole-innosetup.iss
+      - name: Create Windows Installer
+        if: matrix.os == 'windows-latest'
+        run: iscc.exe kconsole-innosetup.iss
 
       - name: Push Windows Release
         uses: softprops/action-gh-release@v1
