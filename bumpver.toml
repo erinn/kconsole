@@ -11,7 +11,7 @@ push = true
     'current_version = "{version}"',
 ]
 
-"kconsole/__init__.py" = [
+'kconsole/__init__.py' = [
   '__version__ = "{version}"',
 ]
 
