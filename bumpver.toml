@@ -16,5 +16,5 @@ push = true
 ]
 
 ".github/workflows/release.yml" = [
-    'version: "{version}"'
+    "version: '{version}'"
 ]
