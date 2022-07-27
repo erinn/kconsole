@@ -6,7 +6,7 @@ import os
 from PyQt6.QtCore import QIODevice, QSettings
 from PyQt6.QtGui import QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
-from PyQt6.QtWidgets import QDialog, QMainWindow, QMessageBox, QStatusBar
+from PyQt6.QtWidgets import QAbstractItemView, QDialog, QMainWindow, QMessageBox, QStatusBar
 from ksync.ksync import KSync
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
@@ -25,6 +25,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.settings = self.load_settings()
         self.saved_settings = QSettings()
         self.setupUi(self)
+        self.radioTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+
         self.actionSettings.setIcon(
             QIcon(os.path.join(basedir, "ui/resources/gear.png"))
         )
@@ -49,10 +51,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSettings.triggered.connect(self.open_settings_dialog)
         self.serial_port.readyRead.connect(self.display_data_statusbar)
 
-    def display_data_statusbar(self):
+    def display_data_statusbar(self) -> None:
         """
+        Display raw serial data on the status bar as it is received.
 
-        :return:
+        :return: None
         """
         line = self.serial_port.readLine()
         self.statusBar().showMessage(bytes(line).decode())
