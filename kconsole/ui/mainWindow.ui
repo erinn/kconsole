@@ -21,7 +21,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="listView"/>
+     <widget class="QTableView" name="tableView"/>
     </item>
     <item>
      <widget class="QPushButton" name="broadcastButton">

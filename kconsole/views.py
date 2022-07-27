@@ -6,7 +6,7 @@ import os
 from PyQt6.QtCore import QIODevice, QSettings
 from PyQt6.QtGui import QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
-from PyQt6.QtWidgets import QDialog, QMainWindow, QMessageBox
+from PyQt6.QtWidgets import QDialog, QMainWindow, QMessageBox, QStatusBar
 from ksync.ksync import KSync
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
@@ -29,7 +29,7 @@ class Window(QMainWindow, Ui_MainWindow):
             QIcon(os.path.join(basedir, "ui/resources/gear.png"))
         )
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
-        self.connect_signals_slots()
+        self.setStatusBar(QStatusBar(self))
 
         if not self.saved_settings.contains("default_port"):
             self.open_settings_dialog()
@@ -37,6 +37,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.serial_port = None
         self.open_serial_port()
         self.ksync = KSync(self.serial_port)
+        self.connect_signals_slots()
 
     def connect_signals_slots(self):
         """
@@ -46,6 +47,15 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionExit.triggered.connect(self.close)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
+        self.serial_port.readyRead.connect(self.display_data_statusbar)
+
+    def display_data_statusbar(self):
+        """
+
+        :return:
+        """
+        line = self.serial_port.readLine()
+        self.statusBar().showMessage(bytes(line).decode())
 
     def load_settings(self) -> dict:
         """
@@ -269,6 +279,11 @@ class BroadcastDialog(QDialog, Ui_BroadcastDialog):
         self.connect_signal_slots()
 
     def connect_signal_slots(self):
+        """
+        Connect signals to slots.
+
+        :return:
+        """
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
