@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="addDialog" pattern="file:kconsole/ui/addDialog.ui" />
+</component>

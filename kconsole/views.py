@@ -8,9 +8,11 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt6.QtWidgets import QAbstractItemView, QDialog, QMainWindow, QMessageBox, QStatusBar
 from ksync.ksync import KSync
+from kconsole.add_dialog_ui import Ui_AddDialog
+from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
-from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
+
 
 from .models import RadiosModel
 
@@ -53,9 +55,31 @@ class Window(QMainWindow, Ui_MainWindow):
         """
 
         self.actionExit.triggered.connect(self.close)
-        self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
+        self.addButton.clicked.connect(self.open_add_dialog)
+        self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
+        self.deleteButton.clicked.connect(self.delete_radio)
         self.serial_port.readyRead.connect(self.display_data_statusbar)
+
+    def delete_radio(self) -> None:
+        """
+        Delete a row in the DB representing a radio.
+
+        :return: None
+        """
+        row = self.radioTable.currentIndex().row()
+        if row < 0:
+            return
+
+        message_box = QMessageBox.warning(
+            self,
+            "Warning!",
+            "Do you want to remove the selected radio?",
+            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+        )
+
+        if message_box == QMessageBox.StandardButton.Ok:
+            self.radiosModel.delete_radio(row)
 
     def display_data_statusbar(self) -> None:
         """
@@ -73,6 +97,18 @@ class Window(QMainWindow, Ui_MainWindow):
 
         dialog = SettingsDialog(self)
         return dialog.program_settings
+
+    def open_add_dialog(self) -> None:
+        """
+        Open the add radio dialog.
+
+        :return: None
+        """
+
+        dialog = AddDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.radiosModel.add_radio(dialog.data)
+            self.radioTable.resizeColumnsToContents()
 
     def open_broadcast_message_dialog(self) -> None:
         """
@@ -112,6 +148,39 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if self.serial_port.isOpen():
             self.serial_port.close()
+
+
+class AddDialog(QDialog, Ui_AddDialog):
+    """
+    Add entries to DB dialog.
+    """
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setupUi(self)
+        self.data = []
+
+    def accept(self) -> None:
+        """
+        Perform validation on data before sending accept up the stack.
+        :return: None
+        """
+
+        if len(self.fleetIdField.text()) != 3:
+            QMessageBox.critical(self, "Error", "Fleet ID must be three characters.")
+            return
+
+        if len(self.deviceIdField.text()) != 4:
+            QMessageBox.critical(self, "Error", "Device ID must be four characters.")
+            return
+
+        for field in (self.nameField, self.fleetIdField, self.deviceIdField):
+            if not field.text():
+                QMessageBox.critical(self, "Error", f"You must provide {field.objectName()}.")
+                return
+
+            self.data.append(field.text())
+
+        super().accept()
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
