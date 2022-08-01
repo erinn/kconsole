@@ -12,6 +12,8 @@ from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.settings_dialog import Ui_SettingsDialog
 from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 
+from .models import RadiosModel
+
 basedir = os.path.dirname(__file__)
 
 
@@ -25,7 +27,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.settings = self.load_settings()
         self.saved_settings = QSettings()
         self.setupUi(self)
+        self.radiosModel = RadiosModel()
+        self.radioTable.setModel(self.radiosModel.model)
         self.radioTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.radioTable.resizeColumnsToContents()
+        self.radioTable.verticalHeader().hide()
 
         self.actionSettings.setIcon(
             QIcon(os.path.join(basedir, "ui/resources/gear.png"))
