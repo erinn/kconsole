@@ -18,9 +18,11 @@ from ksync.ksync import KSync
 from kconsole.add_dialog_ui import Ui_AddDialog
 from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 from kconsole.main_window_ui import Ui_MainWindow
+from kconsole.models import RadiosModel
 from kconsole.query_location_dialog_ui import Ui_QueryLocationDialog
 from kconsole.settings_dialog_ui import Ui_SettingsDialog
-from kconsole.models import RadiosModel
+from kconsole.text_dialog_ui import Ui_textDialog
+
 
 basedir = os.path.dirname(__file__)
 

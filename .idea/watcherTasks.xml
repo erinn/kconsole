@@ -101,5 +101,25 @@
       <option name="workingDir" value="$ProjectFileDir$/kconsole" />
       <envs />
     </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-o text_dialog_ui.py ui/$FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ui" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="textDialog" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="textDialog" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <envs />
+    </TaskOptions>
   </component>
 </project>
