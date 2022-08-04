@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="queryLocationDialog" pattern="file:kconsole/ui/queryLocationDialog.ui" />
+</component>

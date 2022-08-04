@@ -137,6 +137,14 @@
     <string>Show/Hide Toolbar</string>
    </property>
   </action>
+  <action name="actionQueryLocation">
+   <property name="text">
+    <string>Query Location</string>
+   </property>
+   <property name="toolTip">
+    <string>Query the radio's location</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

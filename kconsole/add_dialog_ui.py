@@ -46,7 +46,7 @@ class Ui_AddDialog(object):
 
     def retranslateUi(self, AddDialog):
         _translate = QtCore.QCoreApplication.translate
-        AddDialog.setWindowTitle(_translate("AddDialog", "Dialog"))
+        AddDialog.setWindowTitle(_translate("AddDialog", "Add Radio"))
         self.nameLabel.setText(_translate("AddDialog", "Name:"))
         self.nameField.setStatusTip(_translate("AddDialog", "An informal name for the radio, i.e. \'Truck Radio\'."))
         self.fleetIdLabel.setText(_translate("AddDialog", "Fleet ID:"))

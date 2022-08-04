@@ -1,20 +1,26 @@
 # -*- coding: utf-8 -*-
 
-"""This module provides views to manage the contacts table."""
+"""This module provides views to manage the radios table."""
 import os
 
-from PyQt6.QtCore import QIODevice, QSettings
-from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import QIODevice, QPoint, QSettings, Qt
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
-from PyQt6.QtWidgets import QAbstractItemView, QDialog, QMainWindow, QMessageBox, QStatusBar
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
+    QDialog,
+    QMainWindow,
+    QMenu,
+    QMessageBox,
+    QStatusBar,
+)
 from ksync.ksync import KSync
 from kconsole.add_dialog_ui import Ui_AddDialog
 from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 from kconsole.main_window_ui import Ui_MainWindow
-from kconsole.settings_dialog import Ui_SettingsDialog
-
-
-from .models import RadiosModel
+from kconsole.query_location_dialog_ui import Ui_QueryLocationDialog
+from kconsole.settings_dialog_ui import Ui_SettingsDialog
+from kconsole.models import RadiosModel
 
 basedir = os.path.dirname(__file__)
 
@@ -31,9 +37,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.radiosModel = RadiosModel()
         self.radioTable.setModel(self.radiosModel.model)
-        self.radioTable.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.radioTable.setSelectionBehavior(
+            QAbstractItemView.SelectionBehavior.SelectRows
+        )
         self.radioTable.resizeColumnsToContents()
         self.radioTable.verticalHeader().hide()
+        self.radioTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self.actionSettings.setIcon(
             QIcon(os.path.join(basedir, "ui/resources/gear.png"))
@@ -49,16 +58,28 @@ class Window(QMainWindow, Ui_MainWindow):
         self.ksync = KSync(self.serial_port)
         self.connect_signals_slots()
 
-    def connect_signals_slots(self):
+    def close_serial_port(self) -> None:
+        """
+        Close the serial port if it was open.
+
+        :return: None
+        """
+
+        if self.serial_port.isOpen():
+            self.serial_port.close()
+
+    def connect_signals_slots(self) -> None:
         """
         Connect signals to slots.
         """
 
         self.actionExit.triggered.connect(self.close)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
+        self.actionQueryLocation.triggered.connect(self.open_query_location_dialog)
         self.addButton.clicked.connect(self.open_add_dialog)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.deleteButton.clicked.connect(self.delete_radio)
+        self.radioTable.customContextMenuRequested.connect(self.radio_table_context_menu)
         self.serial_port.readyRead.connect(self.display_data_statusbar)
 
     def delete_radio(self) -> None:
@@ -119,9 +140,24 @@ class Window(QMainWindow, Ui_MainWindow):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.send_text(dialog.message, broadcast=True)
 
+    def open_query_location_dialog(self) -> None:
+        """
+        Open the query location dialog and populate with data if possible.
+
+        :return: None
+        """
+        record = self.radiosModel.model.record(self.radioTable.currentIndex().row())
+
+        dialog = QueryLocationDialog(self, fleet_id=record.value('fleet'), radio_id=record.value('device_id'))
+
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.radio_id)
+
     def open_settings_dialog(self) -> None:
         """
         Open the settings dialog.
+
+        :return: None
         """
 
         dialog = SettingsDialog(self)
@@ -141,19 +177,24 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.serial_port.open(QIODevice.OpenModeFlag.ReadWrite)
 
-    def close_serial_port(self) -> None:
+    def radio_table_context_menu(self, position: QPoint) -> None:
         """
-        Close the serial port if it was open.
+        Display context menu on right click of radio table.
+
+        :param position:
+        :return: None
         """
 
-        if self.serial_port.isOpen():
-            self.serial_port.close()
+        context = QMenu(self)
+        context.addAction(self.actionQueryLocation)
+        context.exec(self.radioTable.mapToGlobal(position))
 
 
 class AddDialog(QDialog, Ui_AddDialog):
     """
     Add entries to DB dialog.
     """
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
@@ -162,6 +203,7 @@ class AddDialog(QDialog, Ui_AddDialog):
     def accept(self) -> None:
         """
         Perform validation on data before sending accept up the stack.
+
         :return: None
         """
 
@@ -175,7 +217,9 @@ class AddDialog(QDialog, Ui_AddDialog):
 
         for field in (self.nameField, self.fleetIdField, self.deviceIdField):
             if not field.text():
-                QMessageBox.critical(self, "Error", f"You must provide {field.objectName()}.")
+                QMessageBox.critical(
+                    self, "Error", f"You must provide {field.objectName()}."
+                )
                 return
 
             self.data.append(field.text())
@@ -187,6 +231,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
     """
     Build the settings dialog.
     """
+
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
@@ -356,15 +401,6 @@ class BroadcastDialog(QDialog, Ui_BroadcastDialog):
         self.setupUi(self)
         self.connect_signal_slots()
 
-    def connect_signal_slots(self):
-        """
-        Connect signals to slots.
-
-        :return:
-        """
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
     def accept(self) -> None:
         """Accept the message provided through the dialog."""
         self.message = self.broadcastMessage.text()
@@ -380,3 +416,62 @@ class BroadcastDialog(QDialog, Ui_BroadcastDialog):
             return
 
         super().accept()
+
+    def connect_signal_slots(self) -> None:
+        """
+        Connect signals to slots.
+
+        :return: None
+        """
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+
+class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
+    """
+    Query Location Dialog
+    """
+    def __init__(self, parent: object = None, fleet_id: str = None, radio_id: str =None):
+        """
+
+        :param parent:
+        :param fleet_id:
+        :param radio_id:
+        """
+        super().__init__(parent=parent)
+        self.fleet_id = fleet_id
+        self.radio_id = radio_id
+        self.setupUi(self)
+
+        if self.fleet_id:
+            self.fleetId.setText(self.fleet_id)
+
+        if self.radio_id:
+            self.radioId.setText(self.radio_id)
+
+        self.connect_signal_slots()
+
+    def accept(self) -> None:
+        """
+        Accept the message provided through the dialog.
+
+        :return: None
+        """
+        self.fleet_id = self.fleetId.text()
+        self.radio_id = self.radioId.text()
+
+        # TODO, simple validation.
+
+        if not self.fleet_id or not self.radio_id:
+            return
+
+        super().accept()
+
+    def connect_signal_slots(self) -> None:
+        """
+        Connect signals to slots.
+
+        :return: None
+        """
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)

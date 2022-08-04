@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BroadcastDialog</class>
- <widget class="QDialog" name="BroadcastDialog">
+ <class>QueryLocationDialog</class>
+ <widget class="QDialog" name="QueryLocationDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>404</width>
-    <height>90</height>
+    <width>400</width>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Broadcast Text</string>
+   <string>Query Radio Location</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="1">
-    <widget class="QLineEdit" name="broadcastMessage">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="placeholderText">
-      <string>Broadcast Message...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="broadcastMessageLabel">
-     <property name="text">
-      <string>Boradcast Message:</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
+    <widget class="QLineEdit" name="fleetId"/>
+   </item>
+   <item row="3" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -39,8 +25,22 @@
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
-     <property name="centerButtons">
-      <bool>false</bool>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Fleet ID:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="radioId"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Radio ID:</string>
      </property>
     </widget>
    </item>
@@ -51,7 +51,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>BroadcastDialog</receiver>
+   <receiver>QueryLocationDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -67,7 +67,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>BroadcastDialog</receiver>
+   <receiver>QueryLocationDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

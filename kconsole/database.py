@@ -16,8 +16,8 @@ def create_connection(database_name: str):
     data_directory = pathlib.Path(
         QStandardPaths.standardLocations(
             QStandardPaths.StandardLocation.AppLocalDataLocation
-        )
-        [0])
+        )[0]
+    )
 
     db_path = data_directory / database_name
     _create_path_location(db_path)

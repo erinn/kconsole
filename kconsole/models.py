@@ -12,16 +12,29 @@ class RadiosModel:
         self.model = self._create_model()
 
     @staticmethod
-    def _create_model():
-        """Create and set up the model."""
-        tableModel = QSqlTableModel()
-        tableModel.setTable("radios")
-        tableModel.setEditStrategy(QSqlTableModel.EditStrategy.OnFieldChange)
-        tableModel.select()
-        headers = ("ID", "Name", "Fleet ID", "Device ID")
-        for columnIndex, header in enumerate(headers):
-            tableModel.setHeaderData(columnIndex, Qt.Orientation.Horizontal, header)
-        return tableModel
+    def _create_model() -> QSqlTableModel:
+        """
+        Create and set up the model.
+        """
+        table_model = QSqlTableModel()
+        table_model.setTable("radios")
+        table_model.setEditStrategy(QSqlTableModel.EditStrategy.OnFieldChange)
+        table_model.select()
+
+        # End users do not care about the primary key, hide it.
+        table_model.removeColumns(0, 1)
+
+        column_titles = {
+            "name": "Name",
+            "fleet": "Fleet ID",
+            "device_id": "Device ID"
+        }
+
+        for key, value in column_titles.items():
+            index = table_model.fieldIndex(key)
+            table_model.setHeaderData(index, Qt.Orientation.Horizontal, value)
+
+        return table_model
 
     def add_radio(self, data: list) -> None:
         """

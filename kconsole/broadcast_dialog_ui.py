@@ -36,6 +36,6 @@ class Ui_BroadcastDialog(object):
 
     def retranslateUi(self, BroadcastDialog):
         _translate = QtCore.QCoreApplication.translate
-        BroadcastDialog.setWindowTitle(_translate("BroadcastDialog", "Dialog"))
+        BroadcastDialog.setWindowTitle(_translate("BroadcastDialog", "Broadcast Text"))
         self.broadcastMessage.setPlaceholderText(_translate("BroadcastDialog", "Broadcast Message..."))
         self.broadcastMessageLabel.setText(_translate("BroadcastDialog", "Boradcast Message:"))

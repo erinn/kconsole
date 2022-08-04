@@ -18,7 +18,7 @@
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="addDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
@@ -38,7 +38,7 @@
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="broadcastDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
@@ -58,7 +58,7 @@
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="settingsDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
@@ -78,7 +78,27 @@
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="mainWindow" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$PROJECT_DIR$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-o query_location_dialog_ui.py ui/$FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ui" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="queryLocationDialog" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="queryLocationDialog" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
       <envs />
     </TaskOptions>
   </component>
