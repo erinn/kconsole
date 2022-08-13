@@ -55,18 +55,27 @@ def _create_path_location(path: pathlib.Path) -> None:
         return None
 
 
-def _create_radios_table():
+def _create_radios_table() -> bool:
     """
     Create the radio table in the database.
+    :param db: The QSqlDatabase object representing the connection.
+
+    :return: True if successful, false if not.
     """
     create_table_query = QSqlQuery()
-    return create_table_query.exec(
+    query_result = create_table_query.exec(
         """
         CREATE TABLE IF NOT EXISTS radios (
             id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
             name VARCHAR(40) NOT NULL,
-            fleet VARCHAR(50),
-            device_id VARCHAR(40) NOT NULL
+            fleet VARCHAR(3),
+            device_id VARCHAR(4) NOT NULL
         )
         """
     )
+
+    if query_result:
+        return query_result
+    else:
+        print(create_table_query.lastError())
+        return query_result

@@ -36,7 +36,7 @@ class RadiosModel:
 
         return table_model
 
-    def add_radio(self, data: list) -> None:
+    def add_radio(self, data: list) -> bool:
         """
         Add a new row (radio) to the DB.
 
@@ -47,9 +47,15 @@ class RadiosModel:
         rows = self.model.rowCount()
         self.model.insertRows(rows, 1)
         for column, field in enumerate(data):
-            self.model.setData(self.model.index(rows, column + 1), field)
-        self.model.submitAll()
-        self.model.select()
+            self.model.setData(self.model.index(rows, column), field)
+
+        if self.model.submitAll():
+            self.model.select()
+            return True
+        else:
+            print(self.model.lastError().text())
+            print(self.model.query().executedQuery())
+            return False
 
     def delete_radio(self, row: int) -> None:
         """
