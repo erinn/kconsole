@@ -21,7 +21,7 @@ from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.models import RadiosModel
 from kconsole.query_location_dialog_ui import Ui_QueryLocationDialog
 from kconsole.settings_dialog_ui import Ui_SettingsDialog
-from kconsole.text_dialog_ui import Ui_textDialog
+from kconsole.text_dialog_ui import Ui_TextDialog
 
 
 basedir = os.path.dirname(__file__)
@@ -77,6 +77,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.actionExit.triggered.connect(self.close)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
+        self.actionactionTextRadio.triggered.connect(self.open_text_dialog)
         self.actionQueryLocation.triggered.connect(self.open_query_location_dialog)
         self.addButton.clicked.connect(self.open_add_dialog)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
@@ -155,6 +156,16 @@ class Window(QMainWindow, Ui_MainWindow):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.radio_id)
 
+    def open_text_dialog(self) -> None:
+        """
+        Open the text radio dialog.
+
+        :return: None
+        """
+        dialog = TextDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.ksync.send_text(message=dialog.message, fleet=dialog.fleet_id, device=dialog.radio_id)
+
     def open_settings_dialog(self) -> None:
         """
         Open the settings dialog.
@@ -189,6 +200,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         context = QMenu(self)
         context.addAction(self.actionQueryLocation)
+        context.addAction(self.actionactionTextRadio)
         context.exec(self.radioTable.mapToGlobal(position))
 
 
@@ -465,6 +477,51 @@ class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
         # TODO, simple validation.
 
         if not self.fleet_id or not self.radio_id:
+            return
+
+        super().accept()
+
+    def connect_signal_slots(self) -> None:
+        """
+        Connect signals to slots.
+
+        :return: None
+        """
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+
+class TextDialog(QDialog, Ui_TextDialog):
+    """Text Radio Dialog."""
+
+    def __init__(self, parent=None):
+        """Initializer."""
+        super().__init__(parent=parent)
+        self.fleet_id = ""
+        self.radio_id = ""
+        self.message = ""
+        self.setupUi(self)
+        self.connect_signal_slots()
+
+    def accept(self) -> None:
+        """
+        Accept the message provided through the dialog.
+
+        :return: None
+        """
+        self.radio_id = self.deviceIdSpinBox.text()
+        self.fleet_id = self.fleetIdSpinBox.text()
+        self.message = self.radioMessage.text()
+
+        # TODO: Smaller message inside window instead?
+        if len(self.message) > 4096:
+            QMessageBox.critical(
+                self,
+                "Error!",
+                "Message size must not exceed 4096 characters.",
+            )
+
+        if not self.message:
             return
 
         super().accept()

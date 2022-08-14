@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# rpcontacts/kconsole.py
+# main.py
 
-"""This module provides RP Contacts application."""
+"""This module provides the KConsole application."""
 
 import sys
 
@@ -12,7 +12,9 @@ from kconsole.views import Window
 
 
 def main():
-    """RP Contacts main function."""
+    """
+    KConsole main function.
+    """
     # Create the application
     app = QApplication(sys.argv)
     app.setApplicationDisplayName("KConsole")

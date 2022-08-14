@@ -9,53 +9,53 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 
-class Ui_textDialog(object):
-    def setupUi(self, textDialog):
-        textDialog.setObjectName("textDialog")
-        textDialog.resize(400, 253)
-        self.formLayout = QtWidgets.QFormLayout(textDialog)
+class Ui_TextDialog(object):
+    def setupUi(self, TextDialog):
+        TextDialog.setObjectName("TextDialog")
+        TextDialog.resize(400, 253)
+        self.formLayout = QtWidgets.QFormLayout(TextDialog)
         self.formLayout.setObjectName("formLayout")
-        self.fleetIdLabel = QtWidgets.QLabel(textDialog)
+        self.fleetIdLabel = QtWidgets.QLabel(TextDialog)
         self.fleetIdLabel.setObjectName("fleetIdLabel")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.fleetIdLabel)
-        self.fleetIdSpinBox = QtWidgets.QSpinBox(textDialog)
+        self.fleetIdSpinBox = QtWidgets.QSpinBox(TextDialog)
         self.fleetIdSpinBox.setMinimum(100)
         self.fleetIdSpinBox.setMaximum(349)
         self.fleetIdSpinBox.setObjectName("fleetIdSpinBox")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.fleetIdSpinBox)
-        self.deviceIdLabel = QtWidgets.QLabel(textDialog)
+        self.deviceIdLabel = QtWidgets.QLabel(TextDialog)
         self.deviceIdLabel.setObjectName("deviceIdLabel")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.LabelRole, self.deviceIdLabel)
-        self.deviceIdSpinBox = QtWidgets.QSpinBox(textDialog)
+        self.deviceIdSpinBox = QtWidgets.QSpinBox(TextDialog)
         self.deviceIdSpinBox.setMinimum(1000)
         self.deviceIdSpinBox.setMaximum(4999)
         self.deviceIdSpinBox.setObjectName("deviceIdSpinBox")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.FieldRole, self.deviceIdSpinBox)
-        self.buttonBox = QtWidgets.QDialogButtonBox(textDialog)
+        self.buttonBox = QtWidgets.QDialogButtonBox(TextDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.ItemRole.FieldRole, self.buttonBox)
-        self.messageLabel = QtWidgets.QLabel(textDialog)
+        self.messageLabel = QtWidgets.QLabel(TextDialog)
         self.messageLabel.setObjectName("messageLabel")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.messageLabel)
-        self.radioMessage = QtWidgets.QLineEdit(textDialog)
+        self.radioMessage = QtWidgets.QLineEdit(TextDialog)
         self.radioMessage.setMaxLength(4096)
         self.radioMessage.setObjectName("radioMessage")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.radioMessage)
-        self.broadcastCheckBox = QtWidgets.QCheckBox(textDialog)
+        self.broadcastCheckBox = QtWidgets.QCheckBox(TextDialog)
         self.broadcastCheckBox.setObjectName("broadcastCheckBox")
         self.formLayout.setWidget(3, QtWidgets.QFormLayout.ItemRole.FieldRole, self.broadcastCheckBox)
 
-        self.retranslateUi(textDialog)
-        self.buttonBox.accepted.connect(textDialog.accept) # type: ignore
-        self.buttonBox.rejected.connect(textDialog.reject) # type: ignore
-        QtCore.QMetaObject.connectSlotsByName(textDialog)
+        self.retranslateUi(TextDialog)
+        self.buttonBox.accepted.connect(TextDialog.accept) # type: ignore
+        self.buttonBox.rejected.connect(TextDialog.reject) # type: ignore
+        QtCore.QMetaObject.connectSlotsByName(TextDialog)
 
-    def retranslateUi(self, textDialog):
+    def retranslateUi(self, TextDialog):
         _translate = QtCore.QCoreApplication.translate
-        textDialog.setWindowTitle(_translate("textDialog", "Text Radio"))
-        self.fleetIdLabel.setText(_translate("textDialog", "Fleet ID:"))
-        self.deviceIdLabel.setText(_translate("textDialog", "Device ID:"))
-        self.messageLabel.setText(_translate("textDialog", "Message:"))
-        self.broadcastCheckBox.setText(_translate("textDialog", "Broadcast"))
+        TextDialog.setWindowTitle(_translate("TextDialog", "Text Radio"))
+        self.fleetIdLabel.setText(_translate("TextDialog", "Fleet ID:"))
+        self.deviceIdLabel.setText(_translate("TextDialog", "Device ID:"))
+        self.messageLabel.setText(_translate("TextDialog", "Message:"))
+        self.broadcastCheckBox.setText(_translate("TextDialog", "Broadcast"))

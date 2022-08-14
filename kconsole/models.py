@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # rpcontacts/model.py
 
-"""This module provides a model to manage the contacts table."""
+"""This module provides a model to manage the radios table."""
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtSql import QSqlTableModel

@@ -70,7 +70,7 @@
      <x>0</x>
      <y>0</y>
      <width>988</width>
-     <height>28</height>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -143,6 +143,11 @@
    </property>
    <property name="toolTip">
     <string>Query the radio's location</string>
+   </property>
+  </action>
+  <action name="actionactionTextRadio">
+   <property name="text">
+    <string>Text Radio</string>
    </property>
   </action>
  </widget>
