@@ -50,6 +50,8 @@ class Ui_TextDialog(object):
         self.retranslateUi(TextDialog)
         self.buttonBox.accepted.connect(TextDialog.accept) # type: ignore
         self.buttonBox.rejected.connect(TextDialog.reject) # type: ignore
+        self.broadcastCheckBox.toggled['bool'].connect(self.fleetIdSpinBox.setDisabled) # type: ignore
+        self.broadcastCheckBox.toggled['bool'].connect(self.deviceIdSpinBox.setDisabled) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(TextDialog)
 
     def retranslateUi(self, TextDialog):
@@ -58,4 +60,5 @@ class Ui_TextDialog(object):
         self.fleetIdLabel.setText(_translate("TextDialog", "Fleet ID:"))
         self.deviceIdLabel.setText(_translate("TextDialog", "Device ID:"))
         self.messageLabel.setText(_translate("TextDialog", "Message:"))
+        self.broadcastCheckBox.setToolTip(_translate("TextDialog", "When checked Fleet ID and Device ID are disabled."))
         self.broadcastCheckBox.setText(_translate("TextDialog", "Broadcast"))

@@ -16,7 +16,6 @@ from PyQt6.QtWidgets import (
 )
 from ksync.ksync import KSync
 from kconsole.add_dialog_ui import Ui_AddDialog
-from kconsole.broadcast_dialog_ui import Ui_BroadcastDialog
 from kconsole.main_window_ui import Ui_MainWindow
 from kconsole.models import RadiosModel
 from kconsole.query_location_dialog_ui import Ui_QueryLocationDialog
@@ -82,7 +81,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.addButton.clicked.connect(self.open_add_dialog)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.deleteButton.clicked.connect(self.delete_radio)
-        self.radioTable.customContextMenuRequested.connect(self.radio_table_context_menu)
+        self.radioTable.customContextMenuRequested.connect(
+            self.radio_table_context_menu
+        )
         self.serial_port.readyRead.connect(self.display_data_statusbar)
 
     def delete_radio(self) -> None:
@@ -139,9 +140,18 @@ class Window(QMainWindow, Ui_MainWindow):
         Open the Broadcast Message dialog.
         """
 
-        dialog = BroadcastDialog(self)
+        dialog = TextDialog(self)
+        dialog.broadcastCheckBox.setChecked(True)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.ksync.send_text(dialog.message, broadcast=True)
+
+            if dialog.broadcast:
+                self.ksync.send_text(message=dialog.message, broadcast=dialog.broadcast)
+            else:
+                self.ksync.send_text(
+                    message=dialog.message,
+                    fleet=dialog.fleet_id,
+                    device=dialog.radio_id,
+                )
 
     def open_query_location_dialog(self) -> None:
         """
@@ -151,7 +161,9 @@ class Window(QMainWindow, Ui_MainWindow):
         """
         record = self.radiosModel.model.record(self.radioTable.currentIndex().row())
 
-        dialog = QueryLocationDialog(self, fleet_id=record.value('fleet'), radio_id=record.value('device_id'))
+        dialog = QueryLocationDialog(
+            self, fleet_id=record.value("fleet"), radio_id=record.value("device_id")
+        )
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.radio_id)
@@ -164,7 +176,9 @@ class Window(QMainWindow, Ui_MainWindow):
         """
         dialog = TextDialog(self)
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.ksync.send_text(message=dialog.message, fleet=dialog.fleet_id, device=dialog.radio_id)
+            self.ksync.send_text(
+                message=dialog.message, fleet=dialog.fleet_id, device=dialog.radio_id
+            )
 
     def open_settings_dialog(self) -> None:
         """
@@ -405,47 +419,14 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.program_settings["flow_control"] = self.flowControlBox.currentData()
 
 
-class BroadcastDialog(QDialog, Ui_BroadcastDialog):
-    """Broadcast dialog."""
-
-    def __init__(self, parent=None):
-        """Initializer."""
-        super().__init__(parent=parent)
-        self.message = ""
-        self.setupUi(self)
-        self.connect_signal_slots()
-
-    def accept(self) -> None:
-        """Accept the message provided through the dialog."""
-        self.message = self.broadcastMessage.text()
-
-        if len(self.message) > 4096:
-            QMessageBox.critical(
-                self,
-                "Error!",
-                "Message size must not exceed 4096 characters.",
-            )
-
-        if not self.message:
-            return
-
-        super().accept()
-
-    def connect_signal_slots(self) -> None:
-        """
-        Connect signals to slots.
-
-        :return: None
-        """
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-
-
 class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
     """
     Query Location Dialog
     """
-    def __init__(self, parent: object = None, fleet_id: str = None, radio_id: str =None):
+
+    def __init__(
+        self, parent: object = None, fleet_id: str = None, radio_id: str = None
+    ):
         """
 
         :param parent:
@@ -497,6 +478,7 @@ class TextDialog(QDialog, Ui_TextDialog):
     def __init__(self, parent=None):
         """Initializer."""
         super().__init__(parent=parent)
+        self.broadcast = False
         self.fleet_id = ""
         self.radio_id = ""
         self.message = ""
@@ -509,6 +491,7 @@ class TextDialog(QDialog, Ui_TextDialog):
 
         :return: None
         """
+        self.broadcast = self.broadcastCheckBox.isChecked()
         self.radio_id = self.deviceIdSpinBox.text()
         self.fleet_id = self.fleetIdSpinBox.text()
         self.message = self.radioMessage.text()

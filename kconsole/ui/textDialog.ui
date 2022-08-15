@@ -74,6 +74,9 @@
    </item>
    <item row="3" column="1">
     <widget class="QCheckBox" name="broadcastCheckBox">
+     <property name="toolTip">
+      <string>When checked Fleet ID and Device ID are disabled.</string>
+     </property>
      <property name="text">
       <string>Broadcast</string>
      </property>
@@ -112,6 +115,38 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>broadcastCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fleetIdSpinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>broadcastCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>deviceIdSpinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>187</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>
