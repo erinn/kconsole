@@ -4,7 +4,7 @@
 import os
 
 from PyQt6.QtCore import QIODevice, QPoint, QSettings, Qt
-from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtGui import QIcon
 from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PyQt6.QtWidgets import (
     QAbstractItemView,
@@ -75,9 +75,9 @@ class Window(QMainWindow, Ui_MainWindow):
         """
 
         self.actionExit.triggered.connect(self.close)
-        self.actionSettings.triggered.connect(self.open_settings_dialog)
-        self.actionactionTextRadio.triggered.connect(self.open_text_dialog)
         self.actionQueryLocation.triggered.connect(self.open_query_location_dialog)
+        self.actionSettings.triggered.connect(self.open_settings_dialog)
+        self.actionTextRadio.triggered.connect(self.open_text_dialog)
         self.addButton.clicked.connect(self.open_add_dialog)
         self.broadcastButton.clicked.connect(self.open_broadcast_message_dialog)
         self.deleteButton.clicked.connect(self.delete_radio)
@@ -168,6 +168,16 @@ class Window(QMainWindow, Ui_MainWindow):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.radio_id)
 
+    def open_settings_dialog(self) -> None:
+        """
+        Open the settings dialog.
+
+        :return: None
+        """
+
+        dialog = SettingsDialog(self)
+        dialog.exec()
+
     def open_text_dialog(self) -> None:
         """
         Open the text radio dialog.
@@ -179,16 +189,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.ksync.send_text(
                 message=dialog.message, fleet=dialog.fleet_id, device=dialog.radio_id
             )
-
-    def open_settings_dialog(self) -> None:
-        """
-        Open the settings dialog.
-
-        :return: None
-        """
-
-        dialog = SettingsDialog(self)
-        dialog.exec()
 
     def open_serial_port(self) -> None:
         """
@@ -214,7 +214,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         context = QMenu(self)
         context.addAction(self.actionQueryLocation)
-        context.addAction(self.actionactionTextRadio)
+        context.addAction(self.actionTextRadio)
         context.exec(self.radioTable.mapToGlobal(position))
 
 

@@ -145,7 +145,7 @@
     <string>Query the radio's location</string>
    </property>
   </action>
-  <action name="actionactionTextRadio">
+  <action name="actionTextRadio">
    <property name="text">
     <string>Text Radio</string>
    </property>
