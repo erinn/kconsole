@@ -68,8 +68,10 @@ def _create_radios_table() -> bool:
         CREATE TABLE IF NOT EXISTS radios (
             id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
             name VARCHAR(40) NOT NULL,
-            fleet VARCHAR(3),
-            device_id VARCHAR(4) NOT NULL
+            fleet_id INTEGER NOT NULL,
+            device_id INTEGER NOT NULL,
+            last_contact VARCHAR(40),
+            last_coordinates VARCHAR(40)
         )
         """
     )

@@ -26,8 +26,10 @@ class RadiosModel:
 
         column_titles = {
             "name": "Name",
-            "fleet": "Fleet ID",
-            "device_id": "Device ID"
+            "fleet_id": "Fleet ID",
+            "device_id": "Device ID",
+            "last_contact": "Last Contact",
+            "last_coordinates": "Last Coordinates"
         }
 
         for key, value in column_titles.items():
@@ -41,7 +43,7 @@ class RadiosModel:
         Add a new row (radio) to the DB.
 
         :param data:
-        :return: None
+        :return: True if successful, False if not.
         """
 
         rows = self.model.rowCount()

@@ -7,16 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>132</height>
+    <height>147</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Query Radio Location</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="fleetId"/>
-   </item>
    <item row="3" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -34,13 +31,30 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QLineEdit" name="radioId"/>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Radio ID:</string>
+      <string>Device ID:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="fleetIdSpinBox">
+     <property name="minimum">
+      <number>100</number>
+     </property>
+     <property name="maximum">
+      <number>349</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="deviceIdSpinBox">
+     <property name="minimum">
+      <number>1000</number>
+     </property>
+     <property name="maximum">
+      <number>4999</number>
      </property>
     </widget>
    </item>

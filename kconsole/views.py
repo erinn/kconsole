@@ -150,7 +150,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.ksync.send_text(
                     message=dialog.message,
                     fleet=dialog.fleet_id,
-                    device=dialog.radio_id,
+                    device=dialog.device_id,
                 )
 
     def open_query_location_dialog(self) -> None:
@@ -162,11 +162,11 @@ class Window(QMainWindow, Ui_MainWindow):
         record = self.radiosModel.model.record(self.radioTable.currentIndex().row())
 
         dialog = QueryLocationDialog(
-            self, fleet_id=record.value("fleet"), radio_id=record.value("device_id")
+            self, fleet_id=record.value("fleet_id"), device_id=record.value("device_id")
         )
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.radio_id)
+            self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.device_id)
 
     def open_settings_dialog(self) -> None:
         """
@@ -432,24 +432,24 @@ class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
     """
 
     def __init__(
-        self, parent: object = None, fleet_id: str = None, radio_id: str = None
+        self, parent: object = None, fleet_id: int = None, device_id: int = None
     ):
         """
-
-        :param parent:
-        :param fleet_id:
-        :param radio_id:
+        :param parent: parent object for cleanup and centering.
+        :param fleet_id: The fleet ID of the device to query.
+        :param device_id: The device ID (radio ID) of the device to query.
         """
         super().__init__(parent=parent)
         self.fleet_id = fleet_id
-        self.radio_id = radio_id
+        self.device_id = device_id
         self.setupUi(self)
 
+        # This dialog can either be called with known values or not.
         if self.fleet_id:
-            self.fleetId.setText(self.fleet_id)
+            self.fleetIdSpinBox.setValue(self.fleet_id)
 
-        if self.radio_id:
-            self.radioId.setText(self.radio_id)
+        if self.device_id:
+            self.deviceIdSpinBox.setValue(self.device_id)
 
         self.connect_signal_slots()
 
@@ -459,12 +459,12 @@ class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
 
         :return: None
         """
-        self.fleet_id = self.fleetId.text()
-        self.radio_id = self.radioId.text()
+        self.fleet_id = self.fleetIdSpinBox.text()
+        self.device_id = self.deviceIdSpinBox.text()
 
         # TODO, simple validation.
 
-        if not self.fleet_id or not self.radio_id:
+        if not self.fleet_id or not self.device_id:
             return
 
         super().accept()

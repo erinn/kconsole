@@ -12,12 +12,9 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_QueryLocationDialog(object):
     def setupUi(self, QueryLocationDialog):
         QueryLocationDialog.setObjectName("QueryLocationDialog")
-        QueryLocationDialog.resize(400, 132)
+        QueryLocationDialog.resize(400, 147)
         self.formLayout = QtWidgets.QFormLayout(QueryLocationDialog)
         self.formLayout.setObjectName("formLayout")
-        self.fleetId = QtWidgets.QLineEdit(QueryLocationDialog)
-        self.fleetId.setObjectName("fleetId")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.FieldRole, self.fleetId)
         self.buttonBox = QtWidgets.QDialogButtonBox(QueryLocationDialog)
         self.buttonBox.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
@@ -26,12 +23,19 @@ class Ui_QueryLocationDialog(object):
         self.label_2 = QtWidgets.QLabel(QueryLocationDialog)
         self.label_2.setObjectName("label_2")
         self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label_2)
-        self.radioId = QtWidgets.QLineEdit(QueryLocationDialog)
-        self.radioId.setObjectName("radioId")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.radioId)
         self.label = QtWidgets.QLabel(QueryLocationDialog)
         self.label.setObjectName("label")
         self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.LabelRole, self.label)
+        self.fleetIdSpinBox = QtWidgets.QSpinBox(QueryLocationDialog)
+        self.fleetIdSpinBox.setMinimum(100)
+        self.fleetIdSpinBox.setMaximum(349)
+        self.fleetIdSpinBox.setObjectName("fleetIdSpinBox")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.ItemRole.FieldRole, self.fleetIdSpinBox)
+        self.deviceIdSpinBox = QtWidgets.QSpinBox(QueryLocationDialog)
+        self.deviceIdSpinBox.setMinimum(1000)
+        self.deviceIdSpinBox.setMaximum(4999)
+        self.deviceIdSpinBox.setObjectName("deviceIdSpinBox")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.ItemRole.FieldRole, self.deviceIdSpinBox)
 
         self.retranslateUi(QueryLocationDialog)
         self.buttonBox.accepted.connect(QueryLocationDialog.accept) # type: ignore
@@ -42,4 +46,4 @@ class Ui_QueryLocationDialog(object):
         _translate = QtCore.QCoreApplication.translate
         QueryLocationDialog.setWindowTitle(_translate("QueryLocationDialog", "Query Radio Location"))
         self.label_2.setText(_translate("QueryLocationDialog", "Fleet ID:"))
-        self.label.setText(_translate("QueryLocationDialog", "Radio ID:"))
+        self.label.setText(_translate("QueryLocationDialog", "Device ID:"))
