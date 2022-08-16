@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 pyqt6 = "*"
+ksync = "*"
 
 [dev-packages]
 ipython = "*"
@@ -12,7 +13,6 @@ pyinstaller = "*"
 black = "*"
 pylint = "*"
 bumpver = "*"
-pywin32-ctypes = "*"
 
 [requires]
 python_version = "3.10"

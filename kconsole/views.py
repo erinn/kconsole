@@ -184,10 +184,17 @@ class Window(QMainWindow, Ui_MainWindow):
 
         :return: None
         """
-        dialog = TextDialog(self)
+        record = self.radiosModel.model.record(self.radioTable.currentIndex().row())
+        fleet_id = int(record.value("fleet"))
+        radio_id = int(record.value("device_id"))
+
+        dialog = TextDialog(
+            self, fleet_id=fleet_id, radio_id=radio_id
+        )
+
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.send_text(
-                message=dialog.message, fleet=dialog.fleet_id, device=dialog.radio_id
+                message=dialog.message, fleet=str(dialog.fleet_id), device=str(dialog.radio_id)
             )
 
     def open_serial_port(self) -> None:
@@ -475,14 +482,21 @@ class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
 class TextDialog(QDialog, Ui_TextDialog):
     """Text Radio Dialog."""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, fleet_id: int = None, radio_id: int = None):
         """Initializer."""
         super().__init__(parent=parent)
         self.broadcast = False
-        self.fleet_id = ""
-        self.radio_id = ""
+        self.fleet_id = fleet_id
+        self.radio_id = radio_id
         self.message = ""
         self.setupUi(self)
+
+        if self.fleet_id:
+            self.fleetIdSpinBox.setValue(self.fleet_id)
+
+        if self.radio_id:
+            self.deviceIdSpinBox.setValue(self.radio_id)
+
         self.connect_signal_slots()
 
     def accept(self) -> None:

@@ -48,3 +48,9 @@ coll = COLLECT(
     upx_exclude=[],
     name='kconsole',
 )
+app = BUNDLE(
+    coll,
+    name='KConsole.app',
+    icon=None,
+    bundle_identifier=None,
+)
