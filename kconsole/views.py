@@ -185,11 +185,11 @@ class Window(QMainWindow, Ui_MainWindow):
         :return: None
         """
         record = self.radiosModel.model.record(self.radioTable.currentIndex().row())
-        fleet_id = int(record.value("fleet"))
-        radio_id = int(record.value("device_id"))
+        fleet_id = record.value("fleet_id")
+        device_id = record.value("device_id")
 
         dialog = TextDialog(
-            self, fleet_id=fleet_id, radio_id=radio_id
+            self, fleet_id=fleet_id, device_id=device_id
         )
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -242,15 +242,15 @@ class AddDialog(QDialog, Ui_AddDialog):
         :return: None
         """
 
-        if len(self.fleetIdField.text()) != 3:
+        if len(self.fleetIdspinBox.text()) != 3:
             QMessageBox.critical(self, "Error", "Fleet ID must be three characters.")
             return
 
-        if len(self.deviceIdField.text()) != 4:
+        if len(self.deviceIdspinBox.text()) != 4:
             QMessageBox.critical(self, "Error", "Device ID must be four characters.")
             return
 
-        for field in (self.nameField, self.fleetIdField, self.deviceIdField):
+        for field in (self.nameField, self.fleetIdspinBox, self.deviceIdspinBox):
             if not field.text():
                 QMessageBox.critical(
                     self, "Error", f"You must provide {field.objectName()}."
@@ -482,20 +482,20 @@ class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
 class TextDialog(QDialog, Ui_TextDialog):
     """Text Radio Dialog."""
 
-    def __init__(self, parent=None, fleet_id: int = None, radio_id: int = None):
+    def __init__(self, parent=None, fleet_id: int = None, device_id: int = None):
         """Initializer."""
         super().__init__(parent=parent)
         self.broadcast = False
         self.fleet_id = fleet_id
-        self.radio_id = radio_id
+        self.device_id = device_id
         self.message = ""
         self.setupUi(self)
 
         if self.fleet_id:
             self.fleetIdSpinBox.setValue(self.fleet_id)
 
-        if self.radio_id:
-            self.deviceIdSpinBox.setValue(self.radio_id)
+        if self.device_id:
+            self.deviceIdSpinBox.setValue(self.device_id)
 
         self.connect_signal_slots()
 
@@ -506,7 +506,7 @@ class TextDialog(QDialog, Ui_TextDialog):
         :return: None
         """
         self.broadcast = self.broadcastCheckBox.isChecked()
-        self.radio_id = self.deviceIdSpinBox.text()
+        self.device_id = self.deviceIdSpinBox.text()
         self.fleet_id = self.fleetIdSpinBox.text()
         self.message = self.radioMessage.text()
 
