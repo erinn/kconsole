@@ -149,8 +149,8 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 self.ksync.send_text(
                     message=dialog.message,
-                    fleet=dialog.fleet_id,
-                    device=dialog.device_id,
+                    fleet_id=dialog.fleet_id,
+                    device_id=dialog.device_id,
                 )
 
     def open_query_location_dialog(self) -> None:
@@ -166,7 +166,7 @@ class Window(QMainWindow, Ui_MainWindow):
         )
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.ksync.poll_gnss(fleet=dialog.fleet_id, device=dialog.device_id)
+            self.ksync.poll_gnss(fleet_id=dialog.fleet_id, device_id=dialog.device_id)
 
     def open_settings_dialog(self) -> None:
         """
@@ -194,7 +194,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.send_text(
-                message=dialog.message, fleet=str(dialog.fleet_id), device=str(dialog.radio_id)
+                message=dialog.message, fleet_id=dialog.fleet_id, device_id=dialog.device_id
             )
 
     def open_serial_port(self) -> None:
