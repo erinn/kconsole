@@ -2,27 +2,27 @@
 <project version="4">
   <component name="ProjectTasksOptions">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-o add_dialog_ui.py ui/$FileName$" />
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/add_dialog_ui.py $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="ui" />
       <option name="immediateSync" value="true" />
       <option name="name" value="addDialog" />
-      <option name="output" value="" />
+      <option name="output" value="$ProjectFileDir$/kconsole/ui/" />
       <option name="outputFilters">
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="addDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-o settings_dialog_ui.py ui/$FileName$" />
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/settings_dialog_ui.py $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
@@ -34,15 +34,15 @@
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="settingsDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-o main_window_ui.py ui/$FileName$" />
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/main_window_ui.py $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
@@ -54,15 +54,15 @@
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="mainWindow" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-o query_location_dialog_ui.py ui/$FileName$" />
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/query_location_dialog_ui.py $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
@@ -74,15 +74,15 @@
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="queryLocationDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="-o text_dialog_ui.py ui/$FileName$" />
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/text_dialog_ui.py $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
@@ -94,11 +94,51 @@
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$PyInterpreterDirectory$/pyuic6" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
       <option name="runOnExternalChanges" value="true" />
       <option name="scopeName" value="textDialog" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$ProjectFileDir$/kconsole" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/resources.py $FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ui" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="resources.qrc" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-rcc" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="resources" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$/resources" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/resources.py $FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="*" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="resources.qrc Copy" />
+      <option name="output" value="" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-rcc" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="resources" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$/resources" />
       <envs />
     </TaskOptions>
   </component>

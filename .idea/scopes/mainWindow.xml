@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="mainWindow" pattern="file:kconsole/ui/mainWindow.ui" />
+  <scope name="mainWindow" pattern="file:designer/mainWindow.ui" />
 </component>

@@ -5,7 +5,7 @@
 
 import sys
 
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 from .database import create_connection
 
 from kconsole.views import Window

@@ -2,11 +2,12 @@
 
 """This module provides views to manage the radios table."""
 import os
+import kconsole.ui.resources
 
-from PyQt6.QtCore import QIODevice, QPoint, QSettings, Qt
-from PyQt6.QtGui import QIcon
-from PyQt6.QtSerialPort import QSerialPort, QSerialPortInfo
-from PyQt6.QtWidgets import (
+from PySide6.QtCore import QIODevice, QPoint, QSettings, Qt
+from PySide6.QtGui import QIcon
+from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
     QMainWindow,
@@ -15,12 +16,12 @@ from PyQt6.QtWidgets import (
     QStatusBar,
 )
 from ksync.ksync import KSync
-from kconsole.add_dialog_ui import Ui_AddDialog
-from kconsole.main_window_ui import Ui_MainWindow
+from kconsole.ui.add_dialog_ui import Ui_AddDialog
+from kconsole.ui.main_window_ui import Ui_MainWindow
 from kconsole.models import RadiosModel
-from kconsole.query_location_dialog_ui import Ui_QueryLocationDialog
-from kconsole.settings_dialog_ui import Ui_SettingsDialog
-from kconsole.text_dialog_ui import Ui_TextDialog
+from kconsole.ui.query_location_dialog_ui import Ui_QueryLocationDialog
+from kconsole.ui.settings_dialog_ui import Ui_SettingsDialog
+from kconsole.ui.text_dialog_ui import Ui_TextDialog
 
 
 basedir = os.path.dirname(__file__)
@@ -46,7 +47,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.radioTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self.actionSettings.setIcon(
-            QIcon(os.path.join(basedir, "ui/resources/gear.png"))
+            QIcon(':/icons/settings.png')
         )
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.setStatusBar(QStatusBar(self))
@@ -203,7 +204,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """
 
         self.serial_port = QSerialPort(self.saved_settings.value("default_port"))
-        self.serial_port.setBaudRate(self.settings["baud_rate"].value)
+        self.serial_port.setBaudRate(self.settings["baud_rate"])
         self.serial_port.setParity(self.settings["parity"])
         self.serial_port.setDataBits(self.settings["data_bits"])
         self.serial_port.setStopBits(self.settings["stop_bits"])

@@ -3,8 +3,8 @@
 
 """This module provides a model to manage the radios table."""
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtSql import QSqlTableModel
+from PySide6.QtCore import Qt
+from PySide6.QtSql import QSqlTableModel
 
 
 class RadiosModel:

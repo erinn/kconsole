@@ -1,9 +1,9 @@
 """Database connection operations."""
 import pathlib
 
-from PyQt6.QtWidgets import QMessageBox
-from PyQt6.QtCore import QStandardPaths
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery
+from PySide6.QtWidgets import QMessageBox
+from PySide6.QtCore import QStandardPaths
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 
 def create_connection(database_name: str):
