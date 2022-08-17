@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "KConsole"
-#define MyAppVersion "0.1.5"
+#define MyAppVersion "0.2.0"
 #define MyAppPublisher "SARStats"
 #define MyAppURL "https://www.sarstats.com/"
 #define MyAppExeName "KConsole.exe"
