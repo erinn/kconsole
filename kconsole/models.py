@@ -21,9 +21,6 @@ class RadiosModel:
         table_model.setEditStrategy(QSqlTableModel.EditStrategy.OnFieldChange)
         table_model.select()
 
-        # End users do not care about the primary key, hide it.
-        table_model.removeColumns(0, 1)
-
         column_titles = {
             "name": "Name",
             "fleet_id": "Fleet ID",

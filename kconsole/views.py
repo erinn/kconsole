@@ -37,6 +37,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.settings = self.load_settings()
         self.saved_settings = QSettings()
         self.setupUi(self)
+
+        # Create the main DB interface.
         self.radiosModel = RadiosModel()
         self.radioTable.setModel(self.radiosModel.model)
         self.radioTable.setSelectionBehavior(
@@ -45,10 +47,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.radioTable.resizeColumnsToContents()
         self.radioTable.verticalHeader().hide()
         self.radioTable.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        # Hide the primary key/ID as users don't care.
+        self.radioTable.setColumnHidden(0, True)
 
-        self.actionSettings.setIcon(
-            QIcon(':/icons/settings.png')
-        )
+        self.actionSettings.setIcon(QIcon(':/icons/settings.png'))
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.setStatusBar(QStatusBar(self))
 
@@ -89,7 +91,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def delete_radio(self) -> None:
         """
-        Delete a row in the DB representing a radio.
+        Delete a row in the DB representing a device.
 
         :return: None
         """
@@ -100,7 +102,7 @@ class Window(QMainWindow, Ui_MainWindow):
         message_box = QMessageBox.warning(
             self,
             "Warning!",
-            "Do you want to remove the selected radio?",
+            "Do you want to remove the selected device?",
             QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
         )
 
