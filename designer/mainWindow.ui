@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>KConsole</string>
   </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::VerticalTabs</set>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
@@ -70,7 +73,7 @@
      <x>0</x>
      <y>0</y>
      <width>988</width>
-     <height>36</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -91,7 +94,14 @@
      <string>Window</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionLoggingConsole"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -106,9 +116,14 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionLoggingConsole"/>
    <addaction name="actionSettings"/>
   </widget>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
+   </property>
    <property name="text">
     <string>Settings...</string>
    </property>
@@ -148,6 +163,15 @@
   <action name="actionTextRadio">
    <property name="text">
     <string>Text Radio</string>
+   </property>
+  </action>
+  <action name="actionLoggingConsole">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/terminal</normaloff>:/icons/terminal</iconset>
+   </property>
+   <property name="text">
+    <string>Logging Console</string>
    </property>
   </action>
  </widget>

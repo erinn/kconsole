@@ -2,13 +2,16 @@
 # main.py
 
 """This module provides the KConsole application."""
-
+import logging
 import sys
 
 from PySide6.QtWidgets import QApplication
 from .database import create_connection
 
 from kconsole.views import Window
+
+# Configure root logger.
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main():

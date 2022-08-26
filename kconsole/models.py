@@ -2,9 +2,12 @@
 # rpcontacts/model.py
 
 """This module provides a model to manage the radios table."""
+import logging
 
 from PySide6.QtCore import Qt
 from PySide6.QtSql import QSqlTableModel
+
+logger = logging.getLogger(__name__)
 
 
 class RadiosModel:

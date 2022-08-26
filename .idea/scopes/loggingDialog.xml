@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="loggingDialog" pattern="file:designer/loggingDialog.ui" />
+</component>

@@ -106,7 +106,7 @@
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
-      <option name="fileExtension" value="ui" />
+      <option name="fileExtension" value="*" />
       <option name="immediateSync" value="true" />
       <option name="name" value="resources.qrc" />
       <option name="output" value="" />
@@ -139,6 +139,26 @@
       <option name="scopeName" value="resources" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$ProjectFileDir$/resources" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="-o $ProjectFileDir$/kconsole/ui/logging_dialog_ui.py $FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="ui" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="loggingDialog" />
+      <option name="output" value="$ProjectFileDir$/kconsole/ui/" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PyInterpreterDirectory$/pyside6-uic" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="loggingDialog" />
+      <option name="trackOnlyRoot" value="false" />
+      <option name="workingDir" value="$ProjectFileDir$/designer" />
       <envs />
     </TaskOptions>
   </component>
