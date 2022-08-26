@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
-    <file alias="settings.png">icons/gear.png</file>
+    <file alias="settings">icons/cog-outline.svg</file>
+    <file alias="terminal">icons/terminal-outline.svg</file>
   </qresource>
 </RCC>

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """This module provides views to manage the radios table."""
-import os
+import logging
+
+# Resources looks unused, it isn't and it needs to remain as long as there are icons.
 import kconsole.ui.resources
 
-from PySide6.QtCore import QIODevice, QPoint, QSettings, Qt
+from PySide6.QtCore import QIODevice, QObject, QPoint, QSettings, Qt, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtWidgets import (
@@ -16,15 +18,16 @@ from PySide6.QtWidgets import (
     QStatusBar,
 )
 from ksync.ksync import KSync
+from kconsole.logs import ConsoleWindowLogHandler
 from kconsole.ui.add_dialog_ui import Ui_AddDialog
+from kconsole.ui.logging_dialog_ui import Ui_loggingDialog
 from kconsole.ui.main_window_ui import Ui_MainWindow
 from kconsole.models import RadiosModel
 from kconsole.ui.query_location_dialog_ui import Ui_QueryLocationDialog
 from kconsole.ui.settings_dialog_ui import Ui_SettingsDialog
 from kconsole.ui.text_dialog_ui import Ui_TextDialog
 
-
-basedir = os.path.dirname(__file__)
+logger = logging.getLogger(__name__)
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -38,6 +41,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.saved_settings = QSettings()
         self.setupUi(self)
 
+        # Configure Console Logger.
+        self.console_handler = ConsoleWindowLogHandler()
+        logging.getLogger().addHandler(self.console_handler)
+        self._console_dialog = None
+        logger.debug("Logging configured!")
+
         # Create the main DB interface.
         self.radiosModel = RadiosModel()
         self.radioTable.setModel(self.radiosModel.model)
@@ -50,7 +59,8 @@ class Window(QMainWindow, Ui_MainWindow):
         # Hide the primary key/ID as users don't care.
         self.radioTable.setColumnHidden(0, True)
 
-        self.actionSettings.setIcon(QIcon(':/icons/settings.png'))
+        self.actionSettings.setIcon(QIcon(':/icons/settings'))
+        self.actionLoggingConsole.setIcon(QIcon(":/icons/terminal"))
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.setStatusBar(QStatusBar(self))
 
@@ -79,6 +89,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.actionExit.triggered.connect(self.close)
         self.actionQueryLocation.triggered.connect(self.open_query_location_dialog)
+        self.actionLoggingConsole.triggered.connect(self.open_logging_dialog)
         self.actionSettings.triggered.connect(self.open_settings_dialog)
         self.actionTextRadio.triggered.connect(self.open_text_dialog)
         self.addButton.clicked.connect(self.open_add_dialog)
@@ -155,6 +166,19 @@ class Window(QMainWindow, Ui_MainWindow):
                     fleet_id=dialog.fleet_id,
                     device_id=dialog.device_id,
                 )
+
+    def open_logging_dialog(self) -> None:
+        """
+        Open the logging 'Console' in a non modal QDialog.
+
+        :return: None
+        """
+        if not self._console_dialog:
+            self._console_dialog = LoggingDialog(self)
+            self.console_handler.bridge.sigLog.connect(self._console_dialog.loggingConsole.appendPlainText)
+        self._console_dialog.show()
+
+        logger.debug("Logging console called.")
 
     def open_query_location_dialog(self) -> None:
         """
@@ -263,6 +287,68 @@ class AddDialog(QDialog, Ui_AddDialog):
             self.data.append(field.text())
 
         super().accept()
+
+
+class LoggingDialog(QDialog, Ui_loggingDialog):
+    """
+    Logging Dialog
+    """
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setupUi(self)
+
+
+class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
+    """
+    Query Location Dialog
+    """
+
+    def __init__(
+        self, parent: object = None, fleet_id: int = None, device_id: int = None
+    ):
+        """
+        :param parent: parent object for cleanup and centering.
+        :param fleet_id: The fleet ID of the device to query.
+        :param device_id: The device ID (radio ID) of the device to query.
+        """
+        super().__init__(parent=parent)
+        self.fleet_id = fleet_id
+        self.device_id = device_id
+        self.setupUi(self)
+
+        # This dialog can either be called with known values or not.
+        if self.fleet_id:
+            self.fleetIdSpinBox.setValue(self.fleet_id)
+
+        if self.device_id:
+            self.deviceIdSpinBox.setValue(self.device_id)
+
+        self.connect_signal_slots()
+
+    def accept(self) -> None:
+        """
+        Accept the message provided through the dialog.
+
+        :return: None
+        """
+        self.fleet_id = self.fleetIdSpinBox.text()
+        self.device_id = self.deviceIdSpinBox.text()
+
+        # TODO, simple validation.
+
+        if not self.fleet_id or not self.device_id:
+            return
+
+        super().accept()
+
+    def connect_signal_slots(self) -> None:
+        """
+        Connect signals to slots.
+
+        :return: None
+        """
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
@@ -427,59 +513,6 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.program_settings["parity"] = self.parityBox.currentData()
         self.program_settings["stop_bits"] = self.stopBitsBox.currentData()
         self.program_settings["flow_control"] = self.flowControlBox.currentData()
-
-
-class QueryLocationDialog(QDialog, Ui_QueryLocationDialog):
-    """
-    Query Location Dialog
-    """
-
-    def __init__(
-        self, parent: object = None, fleet_id: int = None, device_id: int = None
-    ):
-        """
-        :param parent: parent object for cleanup and centering.
-        :param fleet_id: The fleet ID of the device to query.
-        :param device_id: The device ID (radio ID) of the device to query.
-        """
-        super().__init__(parent=parent)
-        self.fleet_id = fleet_id
-        self.device_id = device_id
-        self.setupUi(self)
-
-        # This dialog can either be called with known values or not.
-        if self.fleet_id:
-            self.fleetIdSpinBox.setValue(self.fleet_id)
-
-        if self.device_id:
-            self.deviceIdSpinBox.setValue(self.device_id)
-
-        self.connect_signal_slots()
-
-    def accept(self) -> None:
-        """
-        Accept the message provided through the dialog.
-
-        :return: None
-        """
-        self.fleet_id = self.fleetIdSpinBox.text()
-        self.device_id = self.deviceIdSpinBox.text()
-
-        # TODO, simple validation.
-
-        if not self.fleet_id or not self.device_id:
-            return
-
-        super().accept()
-
-    def connect_signal_slots(self) -> None:
-        """
-        Connect signals to slots.
-
-        :return: None
-        """
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
 
 
 class TextDialog(QDialog, Ui_TextDialog):
