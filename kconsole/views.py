@@ -3,10 +3,10 @@
 """This module provides views to manage the radios table."""
 import logging
 
-# Resources looks unused, it isn't and it needs to remain as long as there are icons.
+# Resources looks unused, it isn't, and it needs to remain as long as there are icons.
 import kconsole.ui.resources
 
-from PySide6.QtCore import QIODevice, QObject, QPoint, QSettings, Qt, Signal
+from PySide6.QtCore import QIODevice, QPoint, QSettings, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtWidgets import (
@@ -19,10 +19,10 @@ from PySide6.QtWidgets import (
 )
 from ksync.ksync import KSync
 from kconsole.logs import ConsoleWindowLogHandler
+from kconsole.models import RadiosModel
 from kconsole.ui.add_dialog_ui import Ui_AddDialog
 from kconsole.ui.logging_dialog_ui import Ui_loggingDialog
 from kconsole.ui.main_window_ui import Ui_MainWindow
-from kconsole.models import RadiosModel
 from kconsole.ui.query_location_dialog_ui import Ui_QueryLocationDialog
 from kconsole.ui.settings_dialog_ui import Ui_SettingsDialog
 from kconsole.ui.text_dialog_ui import Ui_TextDialog
@@ -41,11 +41,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.saved_settings = QSettings()
         self.setupUi(self)
 
-        # Configure Console Logger.
+        # Configure Console Logger, we do this as early as possible to capture as much as possible.
         self.console_handler = ConsoleWindowLogHandler()
         logging.getLogger().addHandler(self.console_handler)
-        self._console_dialog = None
-        logger.debug("Logging configured!")
+        self._console_dialog = LoggingDialog(self)
+        self.console_handler.bridge.sigLog.connect(
+            self._console_dialog.loggingConsole.appendPlainText
+        )
+        logger.debug("Logging configured.")
 
         # Create the main DB interface.
         self.radiosModel = RadiosModel()
@@ -59,7 +62,7 @@ class Window(QMainWindow, Ui_MainWindow):
         # Hide the primary key/ID as users don't care.
         self.radioTable.setColumnHidden(0, True)
 
-        self.actionSettings.setIcon(QIcon(':/icons/settings'))
+        self.actionSettings.setIcon(QIcon(":/icons/settings"))
         self.actionLoggingConsole.setIcon(QIcon(":/icons/terminal"))
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.setStatusBar(QStatusBar(self))
@@ -171,11 +174,12 @@ class Window(QMainWindow, Ui_MainWindow):
         """
         Open the logging 'Console' in a non modal QDialog.
 
+        The QDialog is already initalized much further up but it is hidden.
+        This method simply shows the hidden dialog.
+
         :return: None
         """
-        if not self._console_dialog:
-            self._console_dialog = LoggingDialog(self)
-            self.console_handler.bridge.sigLog.connect(self._console_dialog.loggingConsole.appendPlainText)
+
         self._console_dialog.show()
 
         logger.debug("Logging console called.")
@@ -215,13 +219,13 @@ class Window(QMainWindow, Ui_MainWindow):
         fleet_id = record.value("fleet_id")
         device_id = record.value("device_id")
 
-        dialog = TextDialog(
-            self, fleet_id=fleet_id, device_id=device_id
-        )
+        dialog = TextDialog(self, fleet_id=fleet_id, device_id=device_id)
 
         if dialog.exec() == QDialog.DialogCode.Accepted:
             self.ksync.send_text(
-                message=dialog.message, fleet_id=dialog.fleet_id, device_id=dialog.device_id
+                message=dialog.message,
+                fleet_id=dialog.fleet_id,
+                device_id=dialog.device_id,
             )
 
     def open_serial_port(self) -> None:
@@ -293,6 +297,7 @@ class LoggingDialog(QDialog, Ui_loggingDialog):
     """
     Logging Dialog
     """
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
