@@ -29,7 +29,7 @@ class RadiosModel:
             "fleet_id": "Fleet ID",
             "device_id": "Device ID",
             "last_contact": "Last Contact",
-            "last_coordinates": "Last Coordinates"
+            "last_coordinates": "Last Coordinates",
         }
 
         for key, value in column_titles.items():
@@ -45,28 +45,42 @@ class RadiosModel:
         :param data:
         :return: True if successful, False if not.
         """
+        logger.debug("Adding a device to the DB with data: %s.", data)
 
         rows = self.model.rowCount()
         self.model.insertRows(rows, 1)
         for column, field in enumerate(data):
-            self.model.setData(self.model.index(rows, column), field)
+            # First column is the primary key automatically created.
+            self.model.setData(self.model.index(rows, column + 1), field)
 
         if self.model.submitAll():
             self.model.select()
+            logger.debug("Data successfully added to DB.")
             return True
         else:
-            print(self.model.lastError().text())
-            print(self.model.query().executedQuery())
+            logger.info(
+                "Unable to add device to DB, error: %s", self.model.lastError().text()
+            )
+            logger.info("Query executed: %s", self.model.query().executedQuery())
             return False
 
-    def delete_radio(self, row: int) -> None:
+    def delete_radio(self, row: int) -> bool:
         """
         Delete an entry from the radio table.
 
         :param row: The row to be removed.
         :return: None
         """
-
+        logger.debug("Removing device at row: %s from DB.")
         self.model.removeRow(row)
-        self.model.submitAll()
-        self.model.select()
+        if self.model.submitAll():
+            self.model.select()
+            logger.debug("Device successfully removed from DB.")
+            return True
+        else:
+            logger.info(
+                "Device deletion from DB created an error: %s",
+                self.model.lastError().text(),
+            )
+
+            return False
