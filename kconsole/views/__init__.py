@@ -8,7 +8,7 @@ import kconsole.ui.resources
 
 from PySide6.QtCore import QIODevice, QPoint, QSettings, Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from PySide6.QtSerialPort import QSerialPort
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
@@ -67,6 +67,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.menuWindow.addAction(self.toolBar.toggleViewAction())
         self.setStatusBar(QStatusBar(self))
 
+        # First run without any settings configured.
         if not self.saved_settings.contains("default_port"):
             self.open_settings_dialog()
 
@@ -130,7 +131,9 @@ class Window(QMainWindow, Ui_MainWindow):
         :return: None
         """
         line = self.serial_port.readLine()
-        self.statusBar().showMessage(bytes(line).decode())
+        logger.debug('Raw data received on serial port: %s', line)
+
+        self.statusBar().showMessage(f"Raw Message Received: {bytes(line).decode()}", timeout=5000)
 
     def load_settings(self) -> dict:
         """
@@ -240,7 +243,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.serial_port.setStopBits(self.settings["stop_bits"])
         self.serial_port.setFlowControl(self.settings["flow_control"])
 
-        self.serial_port.open(QIODevice.OpenModeFlag.ReadWrite)
+        if self.serial_port.open(QIODevice.OpenModeFlag.ReadWrite):
+            return None
+        else:
+            logger.info('Unable to open serial port due to error: %s', self.serial_port.error())
 
     def radio_table_context_menu(self, position: QPoint) -> None:
         """
